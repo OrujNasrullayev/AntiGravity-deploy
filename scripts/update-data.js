@@ -66,9 +66,9 @@ async function main() {
         console.log(`- Student: ${name} | Attendance: ${Math.round(attendanceValue * 100)}% | Classes: ${attendedCount}/${totalCount}`);
 
         const studentObj = {
-            id: page.id,         // Strictly use the Notion UUID
-            pageId: page.id,     // Strictly use the Notion UUID
-            studentId: page.properties['Student ID']?.formula?.string || 'S000',
+            id: page.id,         // INTERNAL: Strict Notion UUID for operations
+            pageId: page.id,     // API: Used for Relation and Page updates
+            studentId: page.properties['Student ID']?.formula?.string || 'S000', // DISPLAY: Friendly ID
             name: name,
             email: page.properties.Email?.email || null,
             attendanceRate: attendanceValue * 100,
@@ -76,12 +76,12 @@ async function main() {
             totalLessons: totalCount,
             avatar: avatar
         };
-        // Use page.id as map key to ensure exact matches for relations
+        // Explicitly map by UUID for relation lookup
         studentsMap[page.id] = studentObj;
         return studentObj;
     });
 
-    console.log(`✅ Success: Fetched ${studentsArray.length} students with verified UUIDs.`);
+    console.log(`✅ Success: Fetched ${studentsArray.length} students with verified Notion UUIDs.`);
 
     const lessonsArray = lessonPages.map(page => {
         const title = page.properties.Name.title[0]?.plain_text || 'Untitled';
@@ -106,8 +106,8 @@ async function main() {
             .filter(s => s !== undefined);
 
         return {
-            id: humanId,        // Friendly ID (e.g., CC001)
-            pageId: page.id,    // REAL Notion UUID for API calls
+            id: humanId,        // DISPLAY: Friendly ID (e.g., CC001)
+            pageId: page.id,    // API: REAL Notion UUID for automated marking
             title: title,
             type: type,
             status: status,
