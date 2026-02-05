@@ -106,9 +106,9 @@ async function main() {
             .filter(s => s !== undefined);
 
         return {
-            id: humanId,        // DISPLAY: Friendly ID (e.g., CC001)
-            pageId: page.id,    // API: REAL Notion UUID for automated marking
             title: title,
+            pageId: page.id,    // STRICT: This matches the 'data-page-id' in your HTML
+            id: humanId,        // DISPLAY: Friendly ID (e.g., CC001)
             type: type,
             status: status,
             studentCount: enrolledStudents.length,
