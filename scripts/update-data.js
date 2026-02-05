@@ -66,8 +66,8 @@ async function main() {
         console.log(`- Student: ${name} | Attendance: ${Math.round(attendanceValue * 100)}% | Classes: ${attendedCount}/${totalCount}`);
 
         const studentObj = {
-            id: page.id,        // Strict Notion UUID
-            pageId: page.id,    // Strict Notion UUID
+            id: page.id,         // Strictly use the Notion UUID
+            pageId: page.id,     // Strictly use the Notion UUID
             studentId: page.properties['Student ID']?.formula?.string || 'S000',
             name: name,
             email: page.properties.Email?.email || null,
@@ -76,11 +76,12 @@ async function main() {
             totalLessons: totalCount,
             avatar: avatar
         };
+        // Use page.id as map key to ensure exact matches for relations
         studentsMap[page.id] = studentObj;
         return studentObj;
     });
 
-    console.log(`Successfully fetched ${studentsArray.length} students with valid UUIDs.`);
+    console.log(`✅ Success: Fetched ${studentsArray.length} students with verified UUIDs.`);
 
     const lessonsArray = lessonPages.map(page => {
         const title = page.properties.Name.title[0]?.plain_text || 'Untitled';

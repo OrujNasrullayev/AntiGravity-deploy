@@ -32,11 +32,30 @@ exports.handler = async (event, context) => {
         }
 
         const notion = new Client({ auth: NOTION_API_KEY });
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+        // Server-side validation
+        if (!uuidRegex.test(lessonPageId)) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: `Invalid Lesson UUID: ${lessonPageId}. Please sync your data.` }),
+                headers: { 'Content-Type': 'application/json' }
+            };
+        }
 
         // Handle both array and comma-separated string for flexibility
         const absentIds = Array.isArray(absentPageIds)
             ? absentPageIds
             : (absentPageIds ? absentPageIds.split(',').filter(id => id) : []);
+
+        const invalidIds = absentIds.filter(id => !uuidRegex.test(id));
+        if (invalidIds.length > 0) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: `Invalid Student UUID detected: ${invalidIds[0]}. Please run the sync script.` }),
+                headers: { 'Content-Type': 'application/json' }
+            };
+        }
 
         console.log(`Updating attendance for lesson ${lessonPageId}...`);
         console.log(`Marking ${absentIds.length} students as absent.`);
