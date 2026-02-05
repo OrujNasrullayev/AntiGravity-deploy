@@ -1002,7 +1002,12 @@
                     }
                 });
 
-                const lessonPageId = currentLesson.pageId;
+                const lessonPageId = currentLesson.pageId || currentLesson.id;
+
+                if (!lessonPageId || lessonPageId.startsWith('placeholder')) {
+                    alert('❌ Connection Error: This lesson is missing a valid Notion Page ID. \n\nPlease run "node scripts/update-data.js" to sync your latest data from Notion before marking attendance.');
+                    return;
+                }
 
                 try {
                     btn.disabled = true;
