@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Homeworks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/teacher-style.css">
+    <script src="assets/js/lessons.js"></script>
+    <style>
+        .homework-status {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-submitted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status-graded {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="teacher-layout">
+        <!-- Sidebar -->
+        <aside class="teacher-sidebar">
+            <div class="flex items-center gap-3 mb-10 px-2">
+                <img src="assets/img/logo.png" alt="Oruj Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                <div>
+                    <h1 class="font-extrabold text-[#0f172a] leading-tight tracking-tight">ORUJ'S ENGLISH</h1>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Teacher's Portal</p>
+                </div>
+            </div>
+
+            <nav class="flex-grow space-y-2">
+                <a href="teacher-notes.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Student Notes
+                </a>
+                <a href="teacher-calendar.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Calendar
+                </a>
+                <a href="teacher-homework.html" class="teacher-nav-item active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Homeworks
+                </a>
+                <a href="teacher-classes.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Classes
+                </a>
+            </nav>
+
+            <div class="mt-auto pt-6 border-t border-slate-100">
+                <div class="flex items-center gap-3 px-2">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                        class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                    </div>
+                    <a href="teacher-login.html" class="ml-auto text-slate-400 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="teacher-main">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-10">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" placeholder="Search lessons, students, or groups..." class="search-input">
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex bg-white border border-slate-200 rounded-full p-1">
+                        <button class="px-3 py-1 bg-[#2563eb] text-white rounded-full text-[11px] font-bold">EN</button>
+                        <button
+                            class="px-3 py-1 text-slate-400 hover:text-slate-600 rounded-full text-[11px] font-bold transition-colors">AZ</button>
+                    </div>
+                    <button
+                        class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-[#2563eb] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    <button
+                        class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-[#2563eb] transition-colors relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    <button
+                        class="w-10 h-10 bg-[#0f172a] text-white rounded-full flex items-center justify-center hover:bg-[#1e293b] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="mb-10">
+                <h1 class="text-3xl font-extrabold text-[#0f172a] mb-2 tracking-tight">Homework Management</h1>
+                <p class="text-[#64748b] font-medium">Track student submissions and assign new tasks for your groups.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-[1.5fr_1fr] gap-8">
+                <!-- Review Uploads -->
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#2563eb]" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                            </svg>
+                            Recent Submissions
+                        </h2>
+                    </div>
+
+                    <div id="submissions-list" class="space-y-4">
+                        <!-- Empty state -->
+                        <div class="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                            <p class="text-slate-400 font-medium">No recent submissions to review.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assign New Task -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 h-fit shadow-sm">
+                    <h2 class="text-lg font-extrabold flex items-center gap-2 mb-6 border-b border-slate-100 pb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#2563eb]" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Assign New Hometask
+                    </h2>
+
+                    <form id="assign-task-form" class="space-y-5">
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Select
+                                Class</label>
+                            <select id="class-select"
+                                class="w-full bg-[#f8fafc] border border-slate-200 rounded-lg p-3 text-sm font-semibold text-[#0f172a] focus:outline-none focus:border-[#2563eb]">
+                                <option value="">Select a group...</option>
+                                <!-- Injected via JS -->
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Select
+                                Lesson</label>
+                            <select id="lesson-select"
+                                class="w-full bg-[#f8fafc] border border-slate-200 rounded-lg p-3 text-sm font-semibold text-[#0f172a] focus:outline-none focus:border-[#2563eb]">
+                                <option value="">Select a lesson...</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Task
+                                Title</label>
+                            <input type="text" placeholder="e.g. Workbook Page 42"
+                                class="w-full bg-[#f8fafc] border border-slate-200 rounded-lg p-3 text-sm font-semibold text-[#0f172a] focus:outline-none focus:border-[#2563eb] placeholder:font-normal">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label
+                                class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Instructions</label>
+                            <textarea rows="4" placeholder="Describe the task details here..."
+                                class="w-full bg-[#f8fafc] border border-slate-200 rounded-lg p-3 text-sm font-semibold text-[#0f172a] focus:outline-none focus:border-[#2563eb] placeholder:font-normal resize-none"></textarea>
+                        </div>
+
+
+                        <div class="space-y-1">
+                            <label
+                                class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resources</label>
+                            <div
+                                class="border-2 border-dashed border-slate-200 rounded-lg p-6 bg-[#f8fafc] text-center cursor-pointer hover:border-[#2563eb] transition-colors">
+                                <div
+                                    class="w-10 h-10 bg-[#eff6ff] text-[#2563eb] rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                </div>
+                                <div class="text-xs font-bold text-[#0f172a]">Click to upload files</div>
+                                <div class="text-[10px] text-slate-400 mt-1">PDF, DOCX, JPG up to 10MB</div>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-[#2563eb] text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
+                            Assign Task
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const classSelect = document.getElementById('class-select');
+            const lessonSelect = document.getElementById('lesson-select');
+            const form = document.getElementById('assign-task-form');
+            const submissionsList = document.getElementById('submissions-list');
+
+            function initForm() {
+                if (typeof NOTION_GROUPS !== 'undefined') {
+                    const options = NOTION_GROUPS.map(group =>
+                        `<option value="${group.id}">${group.id} - ${group.name}</option>`
+                    ).join('');
+                    classSelect.innerHTML += options;
+                }
+                renderSubmissions();
+            }
+
+            function renderSubmissions() {
+                if (typeof NOTION_SUBMISSIONS !== 'undefined' && NOTION_SUBMISSIONS.length > 0) {
+                    submissionsList.innerHTML = NOTION_SUBMISSIONS.map(sub => `
+                        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#2563eb] font-bold">
+                                        ${sub.studentName.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm">${sub.name}</h4>
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">${sub.studentName}</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${sub.status === 'Checked' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
+                                    ${sub.status}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-50">
+                                <div class="flex gap-2">
+                                    ${sub.uploads.map(file => `
+                                        <a href="${file.url}" target="_blank" class="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            ${file.name}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                                ${sub.status !== 'Checked' ? `
+                                    <button onclick="markAsChecked('${sub.id}', '${sub.name}')" class="px-3 py-1.5 bg-[#2563eb] text-white rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-colors">
+                                        Mark as Checked
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    submissionsList.innerHTML = `
+                        <div class="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                            <p class="text-slate-400 font-medium">No recent submissions to review.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            window.markAsChecked = function (subId, subName) {
+                const cmd = `node scripts/sync-submission-status.js "${subId}" "Checked"`;
+                alert(`Submission "${subName}" marked as checked!\n\nTo update Notion, please run:\n${cmd}`);
+
+                // Locally update UI for immediate feedback
+                const sub = NOTION_SUBMISSIONS.find(s => s.id === subId);
+                if (sub) {
+                    sub.status = 'Checked';
+                    renderSubmissions();
+                }
+            }
+
+            classSelect.addEventListener('change', () => {
+                const selectedGroupId = classSelect.value;
+                lessonSelect.innerHTML = '<option value="">Select a lesson...</option>';
+
+                if (selectedGroupId && typeof NOTION_LESSONS !== 'undefined') {
+                    const filteredLessons = NOTION_LESSONS.filter(l => l.groupId === selectedGroupId);
+
+                    filteredLessons.forEach(lesson => {
+                        const date = new Date(lesson.isoDate).toLocaleDateString();
+                        const option = document.createElement('option');
+                        option.value = lesson.pageId || lesson.id; // Use pageId for Notion relation
+                        option.textContent = `${lesson.id} - ${lesson.title} (${date})`;
+                        lessonSelect.appendChild(option);
+                    });
+                }
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const data = {
+                    lessonId: lessonSelect.value,
+                    groupName: classSelect.options[classSelect.selectedIndex].text,
+                    title: form.querySelector('input[type="text"]').value,
+                    instructions: form.querySelector('textarea').value,
+                    date: new Date().toISOString()
+                };
+
+                if (!data.lessonId || !data.title) {
+                    alert('Please select a lesson and provide a title.');
+                    return;
+                }
+
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Creating Assignment...';
+                btn.disabled = true;
+
+                // Simulate saving to a sync queue
+                const queue = JSON.parse(localStorage.getItem('assignment_sync_queue') || '[]');
+                queue.push(data);
+                localStorage.setItem('assignment_sync_queue', JSON.stringify(queue));
+
+                setTimeout(() => {
+                    alert(`Assignment "${data.title}" has been queued for sync!\n\nTo finalize this in Notion, please run the sync script: \nnode scripts/sync-assignments.js "${data.title}" "${data.lessonId}" "${data.instructions}"`);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    form.reset();
+                    lessonSelect.innerHTML = '<option value="">Select a lesson...</option>';
+                }, 1000);
+            });
+
+            initForm();
+        });
+    </script>
+</body>
+
+</html>

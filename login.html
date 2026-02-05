@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Oruj's English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="bg-[#f1f5f9] min-h-screen flex flex-col">
+
+    <nav class="w-full py-10 px-12 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="flex flex-col">
+                <span class="font-script text-[#2b59ff] text-2xl leading-none">Oruj's</span>
+                <span class="font-bold tracking-[0.2em] text-[#2b59ff] text-[8px] uppercase">English</span>
+            </div>
+        </div>
+        <a href="index.html"
+            class="text-slate-400 hover:text-[#2b59ff] font-black text-xs uppercase tracking-widest transition-colors flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+            Back to Home
+        </a>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center px-6 pb-20">
+        <div
+            class="w-full max-w-md bg-white p-12 rounded-[3rem] shadow-2xl shadow-blue-100 border border-white animate-fade-in text-center">
+            <h1 class="text-4xl font-black text-slate-900 mb-4">Welcome Back</h1>
+            <p class="text-slate-400 font-bold text-sm uppercase tracking-widest mb-12">Log in to your student portal
+            </p>
+
+            <form action="homework.html" class="space-y-8 text-left">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Email
+                        Address</label>
+                    <input type="email" placeholder="name@example.com"
+                        class="w-full px-8 py-5 bg-slate-50 border-2 border-slate-50 rounded-[2rem] focus:ring-4 focus:ring-blue-50 focus:border-[#2b59ff] outline-none transition-all font-bold text-slate-900 placeholder:text-slate-300">
+                </div>
+                <div>
+                    <label
+                        class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Password</label>
+                    <input type="password" placeholder="••••••••"
+                        class="w-full px-8 py-5 bg-slate-50 border-2 border-slate-50 rounded-[2rem] focus:ring-4 focus:ring-blue-50 focus:border-[#2b59ff] outline-none transition-all font-bold text-slate-900 placeholder:text-slate-300">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-[#2b59ff] text-white py-5 rounded-[2rem] font-black text-lg hover:bg-blue-800 transition-all shadow-2xl shadow-blue-100 active:scale-95 mt-4">Log
+                    In</button>
+            </form>
+
+            <div class="mt-12 text-slate-500 font-bold text-xs uppercase tracking-widest">
+                Don't have an account? <a href="#" class="text-[#2b59ff] hover:underline">Sign up for free</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">
+        &copy; 2026 Oruj's English. All rights reserved.
+    </footer>
+
+</body>
+
+</html>

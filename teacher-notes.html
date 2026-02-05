@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Student Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/teacher-style.css">
+    <script src="assets/js/lessons.js"></script>
+    <style>
+        .student-item {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-item.active {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            border-bottom: 1px solid #cbd5e1;
+            /* Added top border for separation if not first child */
+            border-top: 1px solid #cbd5e1;
+            margin-top: -1px;
+            /* Overlap with previous item's border */
+            position: relative;
+            z-index: 10;
+        }
+
+        .student-item.active+.student-item {
+            border-top: none;
+        }
+
+        .editor-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            min-height: 200px;
+        }
+
+        [contenteditable]:empty:before,
+        [contenteditable]:focus:empty:before,
+        [contenteditable][data-is-empty="true"]:before {
+            content: attr(data-placeholder);
+            color: #94a3b8;
+            opacity: 0.5;
+            pointer-events: none;
+            display: block;
+        }
+
+        ::placeholder {
+            color: #94a3b8;
+            opacity: 0.5;
+        }
+
+        #feedback-editor b,
+        #feedback-editor strong {
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        /* Format Buttons Toggle State */
+        .format-btn {
+            background-color: white;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .format-btn:hover {
+            background-color: #f8fafc;
+        }
+
+        .format-btn.active {
+            background-color: #2563eb !important;
+            color: white !important;
+            border-color: #2563eb !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="teacher-layout">
+        <!-- Sidebar -->
+        <aside class="teacher-sidebar">
+            <div class="flex items-center gap-3 mb-10 px-2">
+                <img src="assets/img/logo.png" alt="Oruj Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                <div>
+                    <h1 class="font-extrabold text-[#0f172a] leading-tight tracking-tight">ORUJ'S ENGLISH</h1>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Teacher's Portal</p>
+                </div>
+            </div>
+
+            <nav class="flex-grow space-y-2">
+                <a href="teacher-notes.html" class="teacher-nav-item active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Student Notes
+                </a>
+                <a href="teacher-calendar.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Calendar
+                </a>
+                <a href="teacher-homework.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Homeworks
+                </a>
+                <a href="teacher-classes.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Classes
+                </a>
+            </nav>
+
+            <div class="mt-auto pt-6 border-t border-slate-100">
+                <div class="flex items-center gap-3 px-2">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                        class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                    </div>
+                    <a href="teacher-login.html" class="ml-auto text-slate-400 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="teacher-main !px-10 !py-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="global-search" placeholder="Search lessons, students, or groups..."
+                        class="search-input">
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex bg-white border border-slate-200 rounded-full p-1">
+                        <button class="px-3 py-1 bg-[#2563eb] text-white rounded-full text-[11px] font-bold">EN</button>
+                        <button
+                            class="px-3 py-1 text-slate-400 hover:text-slate-600 rounded-full text-[11px] font-bold transition-colors">AZ</button>
+                    </div>
+                    <button
+                        class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-[#2563eb] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    <button
+                        class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-[#2563eb] transition-colors relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    <button
+                        class="w-10 h-10 bg-[#0f172a] text-white rounded-full flex items-center justify-center hover:bg-[#1e293b] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-extrabold text-[#0f172a] tracking-tight">Student Notes & Feedback</h1>
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <button id="group-filter-btn"
+                            class="flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                            <span id="current-group-label">All Groups</span>
+                        </button>
+                        <!-- Group Dropdown -->
+                        <div id="group-dropdown"
+                            class="hidden absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <!-- Options injected via JS -->
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="student-search-input" placeholder="Find student..."
+                            class="bg-[#f8fafc] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm w-48 focus:outline-none focus:border-[#2563eb] transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="grid grid-cols-[280px_1fr] h-[calc(100vh-140px)] border border-[#e2e8f0] bg-white rounded-2xl overflow-hidden">
+                <!-- Inner Sidebar -->
+                <div class="border-r border-[#e2e8f0] flex flex-col">
+                    <div class="p-3 border-b border-[#e2e8f0]">
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ENROLLED STUDENTS</h3>
+                    </div>
+
+                    <div id="students-list" class="overflow-y-auto flex-grow">
+                        <!-- Students injected here -->
+                    </div>
+                </div>
+
+                <!-- Main Editor Area -->
+                <div id="editor-placeholder"
+                    class="flex-grow flex items-center justify-center bg-[#f8fafc] text-slate-400 font-medium">
+                    Select a student to view or edit notes
+                </div>
+
+                <div id="editor-area" class="hidden bg-[#f8fafc] p-4 flex flex-col gap-4 overflow-y-auto">
+                    <!-- Profile Header -->
+                    <div
+                        class="bg-white border border-[#e2e8f0] rounded-xl p-4 flex justify-between items-center shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <img id="active-avatar" src="" class="w-11 h-11 rounded-full border-2 border-white shadow">
+                            <div>
+                                <h2 id="active-name" class="text-lg font-extrabold text-[#0f172a]"></h2>
+                                <div class="flex items-center gap-2 text-sm font-medium text-slate-500 mt-1">
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#2563eb]"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                            <path
+                                                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                        </svg>
+                                        <span id="active-lesson"></span>
+                                    </div>
+                                    <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        <span id="active-group"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="text-right text-[10px] font-bold text-slate-400 leading-tight">
+                                Last saved:<br>Just now
+                            </div>
+                            <button id="save-notes-btn"
+                                class="bg-[#2563eb] text-white px-5 py-2.5 rounded-lg font-extrabold text-sm shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                </svg>
+                                Save Notes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-4 h-full">
+                        <!-- Lesson Feedback -->
+                        <div class="bg-white border border-[#e2e8f0] rounded-xl flex flex-col shadow-sm">
+                            <div
+                                class="p-3 border-b border-[#f1f5f9] flex justify-between items-center bg-[#f8fafc] rounded-t-xl">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-7 h-7 rounded-lg bg-blue-100 text-[#2563eb] flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-[#0f172a] text-xs">Lesson Feedback</h3>
+                                        <p class="text-[9px] text-[#2563eb] font-bold uppercase tracking-wider">VISIBLE
+                                            TO STUDENT</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="flex gap-1.5 px-3 border-r border-slate-200">
+                                        <button id="bold-btn"
+                                            class="format-btn w-7 h-7 flex items-center justify-center rounded shadow-sm active:scale-95 transition-all"
+                                            title="Bold (Ctrl+B)">
+                                            <span class="font-black text-xs">B</span>
+                                        </button>
+                                        <button id="italic-btn"
+                                            class="format-btn w-7 h-7 flex items-center justify-center rounded shadow-sm active:scale-95 transition-all italic"
+                                            title="Italic (Ctrl+I)">
+                                            <span class="font-serif font-bold text-xs">I</span>
+                                        </button>
+                                        <button id="underline-btn"
+                                            class="format-btn w-7 h-7 flex items-center justify-center rounded shadow-sm active:scale-95 transition-all underline"
+                                            title="Underline (Ctrl+U)">
+                                            <span class="font-bold text-xs">U</span>
+                                        </button>
+                                    </div>
+                                    <div class="relative">
+                                        <select id="target-lesson-select"
+                                            class="appearance-none bg-white border border-slate-200 text-[10px] font-bold text-slate-600 pl-3 pr-8 py-1.5 rounded-lg focus:outline-none focus:border-[#2563eb] cursor-pointer hover:bg-slate-50 transition-all">
+                                            <option value="">Select Session...</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="feedback-editor" contenteditable="true"
+                                class="flex-grow p-4 text-[13px] font-medium text-[#64748b] placeholder:text-slate-300 resize-none outline-none leading-relaxed overflow-y-auto min-h-[150px]"
+                                data-placeholder="Write constructive feedback for the student regarding today's lesson performance, homework assignment, and areas for improvement...">
+                            </div>
+                            <div
+                                class="p-3 border-t border-[#f1f5f9] flex justify-between items-center text-xs font-bold text-slate-400 bg-white rounded-b-xl">
+                                <span id="word-count">0 words</span>
+                                <span id="save-status" class="text-[#22c55e] flex items-center gap-1 font-bold">
+                                    <div id="save-status-indicator" class="w-2 h-2 rounded-full bg-[#22c55e]"></div>
+                                    <span id="save-status-text">Saved</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const feedbackEditor = document.getElementById('feedback-editor');
+            const wordCountDisplay = document.getElementById('word-count');
+            const activeName = document.getElementById('active-name');
+            const activeAvatar = document.getElementById('active-avatar');
+            const activeLesson = document.getElementById('active-lesson');
+            const activeGroup = document.getElementById('active-group');
+            const targetLessonSelect = document.getElementById('target-lesson-select');
+            const studentsList = document.getElementById('students-list');
+            const boldBtn = document.getElementById('bold-btn');
+            const italicBtn = document.getElementById('italic-btn');
+            const underlineBtn = document.getElementById('underline-btn');
+            const saveNotesBtn = document.getElementById('save-notes-btn');
+            const saveStatus = document.getElementById('save-status');
+            const saveStatusIndicator = document.getElementById('save-status-indicator');
+            const saveStatusText = document.getElementById('save-status-text');
+            const editorArea = document.getElementById('editor-area');
+            const editorPlaceholder = document.getElementById('editor-placeholder');
+            const groupDropdown = document.getElementById('group-dropdown');
+            const groupFilterBtn = document.getElementById('group-filter-btn');
+            const currentGroupLabel = document.getElementById('current-group-label');
+            const studentSearchInput = document.getElementById('student-search-input');
+
+            let currentFilter = 'all';
+            let currentSearch = '';
+
+            // Initialize Group dropdown
+            function initFilters() {
+                let dropdownHtml = `<button class="w-full text-left px-4 py-2.5 text-xs font-extrabold text-[#0f172a] hover:bg-slate-50 border-b border-slate-100 group-filter-option" data-group="all">All Groups</button>`;
+                NOTION_GROUPS.forEach(group => {
+                    dropdownHtml += `<button class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50 border-b border-slate-100 group-filter-option" data-group="${group.id}">Group ${group.id}</button>`;
+                });
+                groupDropdown.innerHTML = dropdownHtml;
+
+                document.querySelectorAll('.group-filter-option').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        currentFilter = btn.dataset.group;
+                        currentGroupLabel.textContent = btn.textContent;
+                        groupDropdown.classList.add('hidden');
+                        renderStudents();
+                    });
+                });
+            }
+
+            groupFilterBtn.addEventListener('click', () => groupDropdown.classList.toggle('hidden'));
+
+            studentSearchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                renderStudents();
+            });
+
+            function renderStudents() {
+                const studentsWithMetadata = [];
+                NOTION_GROUPS.forEach(group => {
+                    group.students.forEach(student => {
+                        if (currentFilter !== 'all' && group.id !== currentFilter) return;
+                        if (currentSearch && !student.name.toLowerCase().includes(currentSearch)) return;
+
+                        studentsWithMetadata.push({
+                            ...student,
+                            groupId: group.id,
+                            groupName: group.name,
+                            activeLesson: group.name // Simple fallback
+                        });
+                    });
+                });
+
+                // Deduplicate and render
+                const uniqueStudents = Array.from(new Map(studentsWithMetadata.map(s => [s.id, s])).values());
+
+                studentsList.innerHTML = uniqueStudents.map(student => `
+                    <div class="student-item p-3 flex items-center justify-between cursor-pointer hover:bg-slate-50" data-student-id="${student.id}">
+                        <div class="flex items-center gap-3">
+                            <img src="${student.avatar}" class="w-10 h-10 rounded-full border border-white shadow-sm">
+                            <div>
+                                <h4 class="font-bold text-[#0f172a] text-sm">${student.name}</h4>
+                                <p class="text-[10px] text-slate-500">Group ${student.groupId}</p>
+                            </div>
+                        </div>
+                        <span class="student-badge bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">${student.groupId}</span>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.student-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const studentId = item.dataset.studentId;
+                        const student = uniqueStudents.find(s => s.id === studentId);
+                        openStudentEditor(student, item);
+                    });
+                });
+            }
+
+            function openStudentEditor(student, item) {
+                // UI updates
+                document.querySelectorAll('.student-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                editorPlaceholder.classList.add('hidden');
+                editorArea.classList.remove('hidden');
+
+                activeName.textContent = student.name;
+                activeAvatar.src = student.avatar;
+                activeGroup.textContent = `Group ${student.groupId}`;
+                activeLesson.textContent = student.activeLesson;
+
+                // Populate lessons for the student
+                const now = new Date();
+                const studentLessons = NOTION_LESSONS.filter(l =>
+                    l.students.some(s => s.id === student.id) &&
+                    new Date(l.isoDate) < now
+                ).sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
+                targetLessonSelect.innerHTML = studentLessons.map(l => {
+                    const date = new Date(l.isoDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    return `<option value="${l.id}">${l.id} - ${l.title} (${date})</option>`;
+                }).join('') || '<option value="">No completed sessions</option>';
+
+                feedbackEditor.setAttribute('data-placeholder', `Write constructive feedback for ${student.name.split(' ')[0]}...`);
+                feedbackEditor.innerHTML = localStorage.getItem(`feedback-${student.id}-${targetLessonSelect.value}`) || '';
+                checkEmpty();
+
+                updateWordCount();
+                setSaved();
+            }
+
+            // Word Count
+            const updateWordCount = () => {
+                const text = feedbackEditor.innerText.trim();
+                const words = text ? text.split(/\s+/).length : 0;
+                wordCountDisplay.textContent = `${words} ${words === 1 ? 'word' : 'words'}`;
+            };
+
+            feedbackEditor.addEventListener('input', updateWordCount);
+
+            // Formatting
+            function updateFormatButtons() {
+                boldBtn.classList.toggle('active', document.queryCommandState('bold'));
+                italicBtn.classList.toggle('active', document.queryCommandState('italic'));
+                underlineBtn.classList.toggle('active', document.queryCommandState('underline'));
+            }
+
+            feedbackEditor.addEventListener('keyup', updateFormatButtons);
+            feedbackEditor.addEventListener('mouseup', updateFormatButtons);
+
+            // Robust Placeholder Logic
+            const checkEmpty = () => {
+                const text = feedbackEditor.innerText.trim();
+                if (!text || text === '\n') {
+                    feedbackEditor.innerHTML = '';
+                    feedbackEditor.setAttribute('data-is-empty', 'true');
+                } else {
+                    feedbackEditor.removeAttribute('data-is-empty');
+                }
+            };
+            feedbackEditor.addEventListener('input', checkEmpty);
+            feedbackEditor.addEventListener('blur', checkEmpty);
+
+            boldBtn.addEventListener('click', () => { document.execCommand('bold'); updateFormatButtons(); });
+            italicBtn.addEventListener('click', () => { document.execCommand('italic'); updateFormatButtons(); });
+            underlineBtn.addEventListener('click', () => { document.execCommand('underline'); updateFormatButtons(); });
+
+            // Save Logic (Local Simulation)
+            function setNotSaved() {
+                saveStatus.className = 'text-amber-500 flex items-center gap-1 font-bold';
+                saveStatusIndicator.className = 'w-2 h-2 rounded-full bg-amber-500';
+                saveStatusText.textContent = 'Not Saved';
+            }
+
+            function setSaved() {
+                saveStatus.className = 'text-[#22c55e] flex items-center gap-1 font-bold';
+                saveStatusIndicator.className = 'w-2 h-2 rounded-full bg-[#22c55e]';
+                saveStatusText.textContent = 'Saved';
+            }
+
+            feedbackEditor.addEventListener('input', setNotSaved);
+
+            saveNotesBtn.addEventListener('click', () => {
+                const activeItem = document.querySelector('.student-item.active');
+                if (!activeItem || !targetLessonSelect.value) return;
+
+                const studentId = activeItem.dataset.studentId;
+                const lessonId = targetLessonSelect.value;
+                const feedbackText = feedbackEditor.innerText.trim();
+
+                // Get internal Notion Page IDs for syncing
+                const student = NOTION_STUDENTS.find(s => s.id === studentId);
+                const teacher = NOTION_TEACHERS[0]; // Assuming first teacher for now
+                const lesson = NOTION_LESSONS.find(l => l.id === lessonId);
+
+                const data = {
+                    feedback: feedbackText,
+                    studentPageId: student ? student.pageId : null,
+                    teacherPageId: teacher ? teacher.pageId : null,
+                    lessonPageId: lesson ? lesson.pageId : null,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Store in local storage queue (Local Simulation)
+                localStorage.setItem(`feedback-${studentId}-${lessonId}`, feedbackEditor.innerHTML);
+
+                const queue = JSON.parse(localStorage.getItem('student_feedback_queue') || '[]');
+                queue.push(data);
+                localStorage.setItem('student_feedback_queue', JSON.stringify(queue));
+
+                saveNotesBtn.innerHTML = 'Saving...';
+
+                setTimeout(() => {
+                    alert(`Feedback for ${student.name} has been queued!\n\nTo sync this with Notion, run:\nnode scripts/sync-feedback.js "${data.feedback}" "${data.studentPageId}" "${data.teacherPageId}" "${data.lessonPageId}"`);
+                    saveNotesBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg> Save Notes';
+                    setSaved();
+                }, 500);
+            });
+
+            // Target Lesson selection change
+            targetLessonSelect.addEventListener('change', () => {
+                const activeItem = document.querySelector('.student-item.active');
+                if (!activeItem) return;
+                const id = activeItem.dataset.studentId;
+                const lessonId = targetLessonSelect.value;
+                feedbackEditor.innerHTML = localStorage.getItem(`feedback-${id}-${lessonId}`) || '';
+                checkEmpty();
+                setSaved();
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!groupFilterBtn.contains(e.target) && !groupDropdown.contains(e.target)) {
+                    groupDropdown.classList.add('hidden');
+                }
+            });
+
+            // Init
+            initFilters();
+            renderStudents();
+        });
+    </script>
+</body>
+
+</html>

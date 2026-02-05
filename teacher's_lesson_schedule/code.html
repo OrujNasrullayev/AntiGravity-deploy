@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Oruj's English - Teacher's Lesson Schedule</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-dark": "#0e46b9",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2235",
+                        "text-main": "#0d121b",
+                        "text-secondary": "#4c669a",
+                        "border-light": "#cfd7e7",
+                        "border-dark": "#2a3447",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white antialiased transition-colors duration-200">
+<div class="flex h-screen w-full overflow-hidden">
+<aside class="flex w-64 flex-col border-r border-border-light bg-surface-light dark:border-border-dark dark:bg-surface-dark flex-shrink-0 z-20 transition-all duration-300">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<div class="flex gap-3 items-center px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDsVpRQ8ZthiDjbKxVctxkkyKzNkqYImRLo6TwUYnMa1hCC2VmeNZMI_LimWqCHHOGeGoEQw25AhvpV-ym-SuZuYtzVXR7FI717lmsmGaUjegSYWAxdqhpgjBXG6lHuvuvqzFJUIv_k12Xe5yMm9YzJOgUmSu0IFaBDwr4DO38lUmRpAyeAhOH0BDW0qd-p3yUZQfOIw_hILVZ1ZVqGc6Q4Pm9e5r_8WeeFUmNrDXTNZgscfhtbt6qeOc3MUNsJxl3kE0lrsLrRk4A");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-main dark:text-white text-base font-bold leading-tight uppercase tracking-tight">Oruj's English</h1>
+<p class="text-text-secondary dark:text-gray-400 text-xs font-normal leading-normal">Teacher's Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1.5">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">description</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Student Notes</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white shadow-md shadow-primary/20 cursor-pointer transition-colors">
+<span class="material-symbols-outlined fill">calendar_month</span>
+<p class="text-sm font-medium leading-normal">Calendar</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">assignment</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Homeworks</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">school</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Classes</p>
+</div>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1 border-t border-border-light dark:border-border-dark pt-4 mb-2">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-text-main dark:group-hover:text-white">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</div>
+</div>
+<div class="flex items-center gap-3 px-2 py-3 border-t border-border-light dark:border-border-dark">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-primary/20 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBPOfxEcj2q6dFWmYXuFLYsnW-SK1hZXQddox2BmYPpK2Sc6d_WZZJ9LElYKaPwYRNJAkPxzkE_TKF-oF9RCy4NZpXmpWvSgiZhHTIXv3HHeAORtc0HoVAi8y-rPcLi9-fg8uW7VJbV8wTb_j0UN1MNObKklV6pDFqz0fTN_Xh0a31xC3TXpKg2LNcpKSE9pqFMBN1PbKa72QJWRvDBmfWtNwK5GaRgZUWCuR30lTAlaOhwLOJGlnWZLaTFF-jHGXNMUyBs-UhpPQY");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-sm font-bold text-text-main dark:text-white truncate">Mr. Anderson</p>
+<p class="text-xs text-text-secondary dark:text-gray-400 truncate">Senior Instructor</p>
+</div>
+<button class="text-text-secondary hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<header class="h-16 border-b border-border-light bg-surface-light dark:border-border-dark dark:bg-surface-dark flex items-center justify-between px-6 flex-shrink-0 z-10">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-background-dark border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search lessons, students, or groups..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1 bg-background-light dark:bg-background-dark rounded-full px-1 py-1 border border-border-light dark:border-border-dark">
+<button class="px-3 py-1 rounded-full bg-white dark:bg-surface-dark shadow-sm text-xs font-semibold text-primary">EN</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-text-secondary dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors">AZ</button>
+</div>
+<button class="p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors rounded-full hover:bg-background-light dark:hover:bg-background-dark">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="relative p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-surface-dark"></span>
+</button>
+<button class="p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-8">
+<div class="mx-auto max-w-6xl flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl md:text-4xl font-bold text-text-main dark:text-white tracking-tight">Teacher's Lesson Schedule</h1>
+<p class="text-text-secondary dark:text-gray-400 text-base max-w-2xl">Manage your weekly teaching agenda and classroom allocations.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex gap-4 rounded-xl border border-border-light bg-surface-light p-5 shadow-sm dark:border-border-dark dark:bg-surface-dark transition-transform hover:-translate-y-1 duration-300">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-primary dark:bg-primary/20 dark:text-primary-300">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium">Today's Sessions</p>
+<h3 class="text-2xl font-bold text-text-main dark:text-white">4 Classes</h3>
+</div>
+</div>
+<div class="flex gap-4 rounded-xl border border-border-light bg-surface-light p-5 shadow-sm dark:border-border-dark dark:bg-surface-dark transition-transform hover:-translate-y-1 duration-300">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium">Active Groups</p>
+<h3 class="text-2xl font-bold text-text-main dark:text-white">12 Groups</h3>
+</div>
+</div>
+<div class="flex gap-4 rounded-xl border border-border-light bg-surface-light p-5 shadow-sm dark:border-border-dark dark:bg-surface-dark transition-transform hover:-translate-y-1 duration-300">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-300">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium">Pending Reports</p>
+<h3 class="text-2xl font-bold text-text-main dark:text-white">2 Reports</h3>
+</div>
+</div>
+</div>
+<div class="flex flex-col rounded-xl border border-border-light bg-surface-light shadow-sm dark:border-border-dark dark:bg-surface-dark overflow-hidden">
+<div class="border-b border-border-light dark:border-border-dark px-6 pt-2 flex items-center justify-between flex-wrap gap-4">
+<div class="flex gap-8">
+<button class="relative py-4 text-sm font-semibold text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary">
+                                Month
+                            </button>
+<button class="py-4 text-sm font-semibold text-text-secondary hover:text-text-main dark:text-gray-400 dark:hover:text-white transition-colors">
+                                Week
+                            </button>
+<button class="py-4 text-sm font-semibold text-text-secondary hover:text-text-main dark:text-gray-400 dark:hover:text-white transition-colors">
+                                Day
+                            </button>
+</div>
+<div class="flex items-center gap-2 pb-2 md:pb-0">
+<button class="p-1 rounded-full hover:bg-background-light dark:hover:bg-background-dark text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<span class="text-sm font-bold text-text-main dark:text-white min-w-[140px] text-center">October 2023</span>
+<button class="p-1 rounded-full hover:bg-background-light dark:hover:bg-background-dark text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-8 gap-4 mb-4 text-center border-b border-border-light dark:border-border-dark pb-4">
+<div class="text-xs font-semibold text-text-secondary dark:text-gray-500 uppercase tracking-wide pt-2">Time</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400 group-hover:text-primary">Mon</span>
+<span class="text-lg font-bold text-text-main dark:text-white group-hover:bg-primary/10 group-hover:text-primary h-8 w-8 flex items-center justify-center rounded-full transition-colors">23</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400 group-hover:text-primary">Tue</span>
+<span class="text-lg font-bold text-text-main dark:text-white group-hover:bg-primary/10 group-hover:text-primary h-8 w-8 flex items-center justify-center rounded-full transition-colors">24</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1">
+<span class="text-xs font-bold text-primary">Wed</span>
+<span class="text-lg font-bold text-white bg-primary h-8 w-8 flex items-center justify-center rounded-full shadow-md shadow-primary/40">25</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400 group-hover:text-primary">Thu</span>
+<span class="text-lg font-bold text-text-main dark:text-white group-hover:bg-primary/10 group-hover:text-primary h-8 w-8 flex items-center justify-center rounded-full transition-colors">26</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400 group-hover:text-primary">Fri</span>
+<span class="text-lg font-bold text-text-main dark:text-white group-hover:bg-primary/10 group-hover:text-primary h-8 w-8 flex items-center justify-center rounded-full transition-colors">27</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer opacity-60">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400">Sat</span>
+<span class="text-lg font-bold text-text-main dark:text-white h-8 w-8 flex items-center justify-center rounded-full">28</span>
+</div>
+<div class="col-span-1 flex flex-col items-center gap-1 group cursor-pointer opacity-60">
+<span class="text-xs font-medium text-text-secondary dark:text-gray-400">Sun</span>
+<span class="text-lg font-bold text-text-main dark:text-white h-8 w-8 flex items-center justify-center rounded-full">29</span>
+</div>
+</div>
+<div class="grid grid-cols-8 gap-4 min-h-[100px] border-b border-border-light/50 dark:border-border-dark/50 last:border-0 relative">
+<div class="text-xs font-medium text-text-secondary dark:text-gray-500 py-2 -mt-2.5 bg-surface-light dark:bg-surface-dark z-10 w-fit pr-2">09:00 AM</div>
+<div class="absolute w-full h-px bg-border-light/50 dark:bg-border-dark/50 top-0 left-0 z-0"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 relative">
+<div class="absolute top-2 left-0 right-0 mx-1 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-l-4 border-gray-400 cursor-pointer hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-600">G001</span>
+<span class="material-symbols-outlined text-gray-400 text-[16px]">check_circle</span>
+</div>
+<p class="text-xs font-bold text-gray-700 dark:text-gray-200 leading-tight">Grammar Intensive</p>
+<p class="text-[10px] text-gray-500 mt-1">09:00 - 10:30</p>
+</div>
+</div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+</div>
+<div class="grid grid-cols-8 gap-4 min-h-[100px] border-b border-border-light/50 dark:border-border-dark/50 last:border-0 relative">
+<div class="text-xs font-medium text-text-secondary dark:text-gray-500 py-2 -mt-2.5 bg-surface-light dark:bg-surface-dark z-10 w-fit pr-2">11:00 AM</div>
+<div class="absolute w-full h-px bg-border-light/50 dark:bg-border-dark/50 top-0 left-0 z-0"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 relative border-l border-border-light/30 dark:border-border-dark/30 bg-primary/5 dark:bg-primary/10 -mx-2 px-2 pb-2 rounded-b-lg">
+<div class="absolute -top-4 left-0 right-0 mx-1 p-3 rounded-lg bg-primary text-white border-l-4 border-blue-300 shadow-lg shadow-primary/20 cursor-pointer hover:scale-[1.02] transition-transform z-20">
+<div class="flex justify-between items-start mb-1.5">
+<span class="text-[10px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded backdrop-blur-sm">C015</span>
+<span class="material-symbols-outlined text-white text-[16px] animate-pulse">videocam</span>
+</div>
+<p class="text-sm font-bold text-white leading-tight mb-0.5">Conversational Skills</p>
+<p class="text-[11px] text-blue-100 font-medium">11:00 - 12:30</p>
+<div class="mt-2 flex -space-x-1.5 overflow-hidden">
+<div class="inline-block h-5 w-5 rounded-full ring-1 ring-white bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCqv15zgTJ0G7fjOMhFE1_Miu2_5usNyrgGf8BLndgVPUvy4r8LVPBX1U7v7T8Sn4kFWr4ku9jfeX7ZvZJA3Z_jsWC2hspXyn7kWHblGFtk01kkaqn7eDKEyIjAqhWdbasCCdSy0mpnNRrZLRGgsNYmSx6sIzuaVyWQhJr_E-JCT97dBPHk4CnUtBQokfMl8kVHxzuxAtjonNpW6Z8Ra8_0N_xU1hm7lwHyT2gY3rMbvU_HXy6CQCpXWJ2_LDC9-wpj8HZiKvGeWNo");'></div>
+<div class="inline-block h-5 w-5 rounded-full ring-1 ring-white bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDiiITdmGUhOclzp9pBXfMsrEVsPSyoWhwDnY8QjcwX6GiD5QA9N68b7kNsmQAz9SolCQc5qrwgdGl-BFNHnvoB8yqFhfJqaDWJoG0N9fNssHB9M3olH4Bffr7sXlGJLVX1-FYSjjHj6NSCeLVtdGykf8danxEN4Ve9gbLDQK6qtNHQI4qO_sO847HRdN8y599u7Icd0p0rD0GEaCsv1GRkeH2w7_sJXL59nu0B8NLc-NdaR8jbDUY4vKytBX0NQ46NhWNwlH1jPGg");'></div>
+<div class="inline-block h-5 w-5 rounded-full ring-1 ring-white bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBMefCa7aY-xJJDttT8QhkBywG2CKbskTyk8RyJRSjDjmKDZR_nt1O1ywToVP2Xr6uCMu-r8zrQ6eFrL7yhYgVLkmjehUGmYdeRQkOj9gS_v7uIbWf5SJR0LPO8gZxyvFphnlpyzxbcDEtPqjxl8K70dBbRxOHAC5PcKusZRNXGfWU3L-C1GkSeBb96lzmFemIfquUE0Lsz_YuSiBj893oLamTScP2lZm1fi6-zfD00ugsoe_5TB_YWnRenSroAbnOpGyAFcabm-dA");'></div>
+<div class="flex h-5 w-5 items-center justify-center rounded-full ring-1 ring-white bg-blue-800 text-[8px] font-medium text-white">+2</div>
+</div>
+</div>
+<div class="absolute top-1/2 w-full border-t-2 border-red-500 z-30 flex items-center">
+<div class="h-2 w-2 bg-red-500 rounded-full -ml-1"></div>
+</div>
+</div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+</div>
+<div class="grid grid-cols-8 gap-4 min-h-[100px] border-b border-border-light/50 dark:border-border-dark/50 last:border-0 relative">
+<div class="text-xs font-medium text-text-secondary dark:text-gray-500 py-2 -mt-2.5 bg-surface-light dark:bg-surface-dark z-10 w-fit pr-2">01:00 PM</div>
+<div class="absolute w-full h-px bg-border-light/50 dark:bg-border-dark/50 top-0 left-0 z-0"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+</div>
+<div class="grid grid-cols-8 gap-4 min-h-[100px] border-b border-border-light/50 dark:border-border-dark/50 last:border-0 relative">
+<div class="text-xs font-medium text-text-secondary dark:text-gray-500 py-2 -mt-2.5 bg-surface-light dark:bg-surface-dark z-10 w-fit pr-2">02:00 PM</div>
+<div class="absolute w-full h-px bg-border-light/50 dark:bg-border-dark/50 top-0 left-0 z-0"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 relative border-l border-border-light/30 dark:border-border-dark/30">
+<div class="absolute top-4 left-0 right-0 mx-1 p-2 rounded-lg bg-white dark:bg-surface-dark border border-primary/30 border-l-4 border-l-primary cursor-pointer hover:shadow-md hover:border-primary transition-all group">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">P034</span>
+<span class="material-symbols-outlined text-text-secondary dark:text-gray-500 group-hover:text-primary text-[16px]">menu_book</span>
+</div>
+<p class="text-xs font-bold text-text-main dark:text-white leading-tight">IELTS Prep</p>
+<p class="text-[10px] text-text-secondary dark:text-gray-400 mt-1">14:00 - 15:30</p>
+</div>
+</div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+<div class="col-span-1 border-l border-border-light/30 dark:border-border-dark/30"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --teacher-bg: #f8fafc;
+    --teacher-sidebar-bg: #ffffff;
+    --teacher-primary: #1d4ed8;
+    --teacher-text-dark: #0f172a;
+    --teacher-text-gray: #64748b;
+    --teacher-border: #e2e8f0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--teacher-bg);
+    color: var(--teacher-text-dark);
+}
+
+.teacher-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.teacher-sidebar {
+    width: 280px;
+    background: var(--teacher-sidebar-bg);
+    border-right: 1px solid var(--teacher-border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 2rem 1.5rem;
+    flex-shrink: 0;
+}
+
+.teacher-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: var(--teacher-text-gray);
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    margin-bottom: 4px;
+    text-decoration: none;
+}
+
+.teacher-nav-item:hover {
+    background-color: #f1f5f9;
+    color: var(--teacher-text-dark);
+}
+
+.teacher-nav-item.active {
+    background-color: #2563eb;
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.teacher-main {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+}
+
+.search-input {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 99px;
+    padding: 12px 24px 12px 48px;
+    width: 400px;
+    font-size: 14px;
+    color: var(--teacher-text-dark);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    background: white;
+}
+
+.class-card {
+    background: white;
+    border: 1px solid var(--teacher-border);
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.2s;
+}
+
+.class-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.avatar-stack {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-stack img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-right: -8px;
+    object-filter: cover;
+}
+
+.avatar-more {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 2px solid white;
+    margin-left: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 1;
+}

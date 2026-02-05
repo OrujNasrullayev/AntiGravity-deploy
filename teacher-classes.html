@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Classes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/teacher-style.css">
+    <script src="assets/js/lessons.js"></script>
+    <style>
+        .tab-btn {
+            position: relative;
+            padding: 1.25rem 0;
+            margin-right: 2.5rem;
+            color: #64748b;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #475569;
+        }
+
+        .tab-btn.active {
+            color: #2563eb !important;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .student-card {
+            background-color: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .student-card:hover {
+            border-color: #e2e8f0;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-active {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status-warning {
+            background-color: #fffbeb;
+            color: #d97706;
+        }
+
+        .status-absent {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .modal-active {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="teacher-layout">
+        <!-- Sidebar -->
+        <aside class="teacher-sidebar">
+            <div class="flex items-center gap-3 mb-10 px-2">
+                <img src="assets/img/logo.png" alt="Oruj Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                <div>
+                    <h1 class="font-extrabold text-[#0f172a] leading-tight tracking-tight">ORUJ'S ENGLISH</h1>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Teacher's Portal</p>
+                </div>
+            </div>
+
+            <nav class="flex-grow space-y-2">
+                <a href="teacher-notes.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Student Notes
+                </a>
+                <a href="teacher-calendar.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Calendar
+                </a>
+                <a href="teacher-homework.html" class="teacher-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Homeworks
+                </a>
+                <a href="teacher-classes.html" class="teacher-nav-item active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Classes
+                </a>
+            </nav>
+
+            <div class="mt-auto pt-6 border-t border-slate-100">
+                <div class="flex items-center gap-3 px-2">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                        class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="teacher-main">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-10">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" placeholder="Search assigned classes..." class="search-input">
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex bg-white border border-slate-200 rounded-full p-1">
+                        <button class="px-3 py-1 bg-[#2563eb] text-white rounded-full text-[11px] font-bold">EN</button>
+                        <button
+                            class="px-3 py-1 text-slate-400 hover:text-slate-600 rounded-full text-[11px] font-bold transition-colors">AZ</button>
+                    </div>
+                    <button
+                        class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-[#2563eb] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div>
+                <h1 class="text-3xl font-extrabold text-[#0f172a] mb-2 tracking-tight">Teacher's Assigned Classes</h1>
+                <p class="text-[#64748b] mb-10 font-medium">Overview of your current class groups and upcoming sessions.
+                </p>
+
+                <div id="classes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Classes will be injected here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Group Details Modal -->
+        <div id="group-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" id="modal-backdrop"></div>
+
+            <div class="fixed inset-0 z-10 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-6">
+                    <div id="modal-panel"
+                        class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all w-full max-w-4xl">
+                        <!-- Modal Header -->
+                        <div class="px-10 pt-10 pb-4 relative">
+                            <button id="close-modal"
+                                class="absolute top-10 right-10 text-slate-400 hover:text-slate-600 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 id="modal-group-name" class="text-2xl font-black text-[#0f172a] tracking-tight">
+                                    Grammar Intensive</h3>
+                            </div>
+                            <p id="modal-group-subtitle"
+                                class="text-xs font-bold text-slate-400 uppercase tracking-widest">Intermediate Level •
+                                12 Active Students</p>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="px-10 border-b border-slate-100 flex gap-1 items-end">
+                            <button data-tab="students"
+                                class="tab-btn active text-sm font-bold transition-colors">Student
+                                List</button>
+                            <button data-tab="history" class="tab-btn text-sm font-bold transition-colors">Class
+                                History</button>
+                            <button data-tab="resources"
+                                class="tab-btn text-sm font-bold transition-colors">Resources</button>
+                        </div>
+
+                        <!-- Modal Content Area -->
+                        <div class="p-10 max-h-[60vh] overflow-y-auto bg-white">
+                            <div id="tab-content-students" class="tab-content">
+                                <div class="flex justify-between items-center mb-8">
+                                    <h4 class="text-[10px] font-black text-slate-800 uppercase tracking-widest">Student
+                                        Roster</h4>
+                                    <span id="student-count-summary"
+                                        class="text-[10px] font-bold text-slate-400">Showing 12 of 12</span>
+                                </div>
+                                <div id="student-list-container" class="student-grid">
+                                    <!-- Students injected here -->
+                                </div>
+                            </div>
+
+                            <div id="tab-content-history" class="tab-content hidden">
+                                <div class="flex justify-between items-center mb-8">
+                                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Session
+                                        Logs</h4>
+                                </div>
+                                <div id="history-container"
+                                    class="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+                                    <!-- History items injected here -->
+                                </div>
+                            </div>
+
+                            <div id="tab-content-resources" class="tab-content hidden">
+                                <div class="text-center py-20">
+                                    <div
+                                        class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-slate-400 font-bold">No resources uploaded for this group yet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('classes-container');
+            const modal = document.getElementById('group-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const closeModal = document.getElementById('close-modal');
+
+            const mId = document.getElementById('modal-group-id');
+            const mName = document.getElementById('modal-group-name');
+            const mSubtitle = document.getElementById('modal-group-subtitle');
+
+            const studentListContainer = document.getElementById('student-list-container');
+            const historyContainer = document.getElementById('history-container');
+            const studentCountSummary = document.getElementById('student-count-summary');
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            let currentGroup = null;
+
+            // Function to get next lesson for a group
+            function getNextLesson(groupId, groupName) {
+                const now = new Date();
+                const upcoming = NOTION_LESSONS
+                    .filter(l => (l.groupId === groupId || l.title.includes(groupName)) && new Date(l.isoDate) > now)
+                    .sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
+
+                if (upcoming.length > 0) {
+                    const date = new Date(upcoming[0].isoDate);
+                    const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const time = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                    return `${day}, ${time}`;
+                }
+                return 'No upcoming';
+            }
+
+            function renderClasses() {
+                if (typeof NOTION_GROUPS === 'undefined' || NOTION_GROUPS.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">No classes found.</div>';
+                    return;
+                }
+
+                container.innerHTML = NOTION_GROUPS.map(group => {
+                    const nextLessonText = getNextLesson(group.id, group.name);
+                    const avatarsHtml = (group.students || []).slice(0, 3).map(s =>
+                        `<img src="${s.avatar}" alt="${s.name}" class="ring-2 ring-white w-8 h-8 rounded-full object-cover">`
+                    ).join('');
+
+                    const moreCount = group.students.length > 3 ? group.students.length - 3 : 0;
+                    const moreHtml = moreCount > 0 ? `<div class="avatar-more">+${moreCount}</div>` : '';
+
+                    const badgeColorClass = group.type === 'conversation'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'bg-blue-50 text-[#2563eb]';
+
+                    const iconColorClass = group.type === 'conversation' ? 'text-orange-600' : 'text-[#2563eb]';
+
+                    return `
+                        <div class="class-card group cursor-pointer hover:border-[#2563eb] transition-all duration-300" onclick="openGroupDetails('${group.id}')">
+                            <div class="flex justify-between items-start mb-6">
+                                <span class="${badgeColorClass} text-[11px] font-bold px-3 py-1 rounded-lg">${group.id}</span>
+                                <button class="text-slate-400 hover:text-[#0f172a]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#0f172a] mb-1 group-hover:text-[#2563eb] transition-colors">${group.name}</h3>
+                            <p class="text-[#64748b] text-sm font-medium mb-8">${group.type.charAt(0).toUpperCase() + group.type.slice(1)} Group</p>
+
+                            <div class="grid grid-cols-2 gap-4 mb-8">
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">STUDENTS</div>
+                                    <div class="font-bold text-[#0f172a] flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${iconColorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        ${group.studentCount}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">NEXT LESSON</div>
+                                    <div class="font-bold text-[#0f172a] flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${iconColorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        ${nextLessonText}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="avatar-stack">
+                                    ${avatarsHtml}
+                                    ${moreHtml}
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-300 group-hover:text-[#2563eb] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.openGroupDetails = function (groupId) {
+                currentGroup = NOTION_GROUPS.find(g => g.id === groupId);
+                if (!currentGroup) return;
+
+                mName.textContent = currentGroup.name;
+                mSubtitle.textContent = `${currentGroup.level || 'General'} Level • ${currentGroup.studentCount} Students`;
+
+                // Set summary
+                studentCountSummary.textContent = `Showing ${currentGroup.students.length} of ${currentGroup.students.length}`;
+
+                renderStudentTab();
+                renderHistoryTab();
+
+                // Reset to first tab
+                tabBtns[0].click();
+
+                // Show modal
+                modal.classList.remove('hidden');
+                document.body.classList.add('modal-active');
+            }
+
+            function renderStudentTab() {
+                studentListContainer.innerHTML = (currentGroup.students || []).map(student => {
+                    const attended = student.attendedLessons ?? 0;
+                    const total = student.totalLessons ?? 0;
+                    const rate = Math.round(student.attendanceRate ?? 0);
+
+                    return `
+                        <div class="bg-white border border-slate-100 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-all duration-300">
+                            <img src="${student.avatar}" class="w-12 h-12 rounded-full border-2 border-slate-50 shadow-sm object-cover" alt="${student.name}">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800">${student.name}</h4>
+                                <p class="text-[11px] font-bold text-[#2563eb] mt-0.5">Attendance: ${rate}% (${attended} of ${total})</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+
+            function renderHistoryTab() {
+                const history = NOTION_LESSONS.filter(l => l.groupId === currentGroup.id)
+                    .sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '<div class="p-10 text-center text-slate-400 font-bold">No past sessions found.</div>';
+                    return;
+                }
+
+                historyContainer.innerHTML = history.map(lesson => {
+                    const date = new Date(lesson.isoDate);
+                    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+                    // Status style
+                    const isCompleted = lesson.status === 'Completed';
+                    const statusClass = isCompleted
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-blue-100 text-blue-600';
+
+                    return `
+                        <div class="bg-white border border-slate-100 rounded-xl p-4 flex items-center justify-between hover:border-blue-100 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">${lesson.title}</h4>
+                                    <p class="text-xs text-slate-400 font-medium">${dateStr} • ${timeStr}</p>
+                                </div>
+                            </div>
+                            <div class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${statusClass}">${lesson.status || 'Scheduled'}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Tab Navigation
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const target = btn.dataset.tab;
+                    tabContents.forEach(content => {
+                        if (content.id === `tab-content-${target}`) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // Close Modal
+            const handleClose = () => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-active');
+            };
+
+            closeModal.addEventListener('click', handleClose);
+            modalBackdrop.addEventListener('click', handleClose);
+
+            renderClasses();
+        });
+    </script>
+</body>
+
+</html>

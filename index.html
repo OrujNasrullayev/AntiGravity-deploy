@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oruj's English - Digital Learning Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-script {
+            font-family: 'Pacifico', cursive;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f8fafc]">
+
+    <!-- Header Section from Image 2 -->
+    <header class="bg-[#112a75] text-white px-6 py-3 sticky top-0 z-50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <span class="font-script text-3xl leading-none">Oruj's English</span>
+        </div>
+
+        <div class="flex items-center gap-10 font-bold text-xs uppercase tracking-widest text-slate-300">
+            <a href="#" class="hover:text-white transition-colors">About</a>
+            <a href="#" class="hover:text-white transition-colors">Courses</a>
+            <a href="#" class="hover:text-white transition-colors">Contact</a>
+
+            <!-- Language Toggle -->
+            <div class="flex items-center bg-white/10 rounded-full px-1 py-1">
+                <span class="bg-white text-[#112a75] px-3 py-1 rounded-full text-[10px] font-black uppercase">EN</span>
+                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase text-white/50">AZ</span>
+            </div>
+
+            <!-- Theme/Moon Icon -->
+            <button class="text-white/80 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero-portal px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            <div class="animate-fade-in">
+                <div
+                    class="inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Digital Learning Portal
+                </div>
+                <h1 class="text-6xl font-black leading-tight mb-6">Master English <br> <span class="text-[#93C5FD]">With
+                        Confidence</span></h1>
+                <p class="text-lg text-white/80 mb-6 leading-relaxed max-w-lg font-medium">
+                    Welcome to Oruj's English portal. Track your lessons, manage assignments, and elevate your language
+                    skills in a structured, academic environment designed for success.
+                </p>
+                <div class="flex gap-4">
+                    <a href="portal.html"
+                        class="btn-portal-primary shadow-xl shadow-[#0c1d52]/50 hover:scale-105 transition-transform">
+                        Enter Portal
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                    <button class="btn-portal-outline hover:bg-white/10 transition-colors">How it works</button>
+                </div>
+
+                <div class="mt-16 flex gap-12">
+                    <div>
+                        <div class="text-3xl font-black mb-1">120+</div>
+                        <div class="text-[10px] font-black text-white/50 uppercase tracking-widest">Lessons</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-black mb-1">100%</div>
+                        <div class="text-[10px] font-black text-white/50 uppercase tracking-widest">Commitment</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Selection Card -->
+            <div class="lg:justify-self-end w-full max-w-md animate-fade-in-right">
+                <div
+                    class="portal-card bg-white/5 border border-white/20 backdrop-blur-xl rounded-[2.5rem] p-10 overflow-hidden relative group">
+                    <div
+                        class="absolute -right-20 -top-20 w-80 h-80 bg-[#1e40af] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity">
+                    </div>
+
+                    <div class="relative z-10">
+                        <div class="flex justify-center mb-8">
+                            <div
+                                class="w-24 h-24 bg-gradient-to-br from-[#0c1d52] to-[#1e40af] rounded-full flex items-center justify-center text-white border-4 border-white/10 shadow-2xl">
+                                <div class="flex flex-col items-center">
+                                    <span class="font-script text-xl leading-none">Oruj's</span>
+                                    <span class="font-bold text-[8px] uppercase tracking-widest">English</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-center mb-10 tracking-tight">Select Your Role</h3>
+
+                        <div class="space-y-4">
+                            <a href="login.html"
+                                class="flex items-center justify-between p-5 bg-white/10 border border-white/10 rounded-2xl hover:bg-white/20 transition-all group">
+                                <div class="flex items-center gap-5">
+                                    <div
+                                        class="w-10 h-10 bg-blue-600/30 text-white rounded-xl flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-white">Student Login</div>
+                                        <div class="text-[10px] text-white/50 font-medium">Access homework & grades
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+
+                            <a href="teacher-login.html"
+                                class="flex items-center justify-between p-5 bg-white/10 border border-white/10 rounded-2xl hover:bg-white/20 transition-all group">
+                                <div class="flex items-center gap-5">
+                                    <div
+                                        class="w-10 h-10 bg-indigo-600/30 text-white rounded-xl flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-white">Teacher Login</div>
+                                        <div class="text-[10px] text-white/50 font-medium">Manage lessons & students
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+
+                        <p class="mt-8 text-center text-[10px] text-white/40 font-bold uppercase tracking-widest">
+                            Need help accessing your account? <a href="#"
+                                class="text-white hover:underline transition-colors">Contact Support</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Summary -->
+    <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto text-center mb-12">
+            <h2 class="text-4xl font-black text-slate-900 mb-6">Why use the Portal?</h2>
+            <p class="text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">Our digital platform bridges the gap
+                between classroom learning and home practice, ensuring consistent progress.</p>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-slate-100 border border-slate-200 rounded-[2.5rem] p-10 animate-fade-in">
+                <div
+                    class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Lesson Tracking</h3>
+                <p class="text-slate-500 text-sm leading-relaxed font-medium">Keep track of every lesson attended and
+                    review past materials anytime to reinforce learning.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-slate-100 border border-slate-200 rounded-[2.5rem] p-10 animate-fade-in"
+                style="animation-delay: 0.1s;">
+                <div
+                    class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Homework Management</h3>
+                <p class="text-slate-500 text-sm leading-relaxed font-medium">Submit assignments digitally, receive
+                    feedback, and monitor your completion status effortlessly.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-slate-100 border border-slate-200 rounded-[2.5rem] p-10 animate-fade-in"
+                style="animation-delay: 0.2s;">
+                <div
+                    class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Progress Analytics</h3>
+                <p class="text-slate-500 text-sm leading-relaxed font-medium">Visualize your improvement over time with
+                    detailed reports on vocabulary, grammar, and fluency.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mini Footer from Image 2 -->
+    <footer
+        class="py-16 text-center text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em] border-t border-slate-100 bg-[#f8fafc]">
+        <div class="mb-4">&copy; 2025 Oruj's English. All rights reserved.</div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Oruj's English - Teacher Homework Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-dark": "#0e46b9",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2235",
+                        "text-main": "#0d121b",
+                        "text-secondary": "#4c669a",
+                        "border-light": "#cfd7e7",
+                        "border-dark": "#2a3447",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white antialiased transition-colors duration-200">
+<div class="flex h-screen w-full overflow-hidden">
+<aside class="flex w-64 flex-col border-r border-border-light bg-surface-light dark:border-border-dark dark:bg-surface-dark flex-shrink-0 z-20 transition-all duration-300">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<div class="flex gap-3 items-center px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDsVpRQ8ZthiDjbKxVctxkkyKzNkqYImRLo6TwUYnMa1hCC2VmeNZMI_LimWqCHHOGeGoEQw25AhvpV-ym-SuZuYtzVXR7FI717lmsmGaUjegSYWAxdqhpgjBXG6lHuvuvqzFJUIv_k12Xe5yMm9YzJOgUmSu0IFaBDwr4DO38lUmRpAyeAhOH0BDW0qd-p3yUZQfOIw_hILVZ1ZVqGc6Q4Pm9e5r_8WeeFUmNrDXTNZgscfhtbt6qeOc3MUNsJxl3kE0lrsLrRk4A");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-main dark:text-white text-base font-bold leading-tight uppercase tracking-tight">Oruj's English</h1>
+<p class="text-text-secondary dark:text-gray-400 text-xs font-normal leading-normal">Teacher's Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1.5">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">description</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Student Notes</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">calendar_month</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Calendar</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white shadow-md shadow-primary/20 cursor-pointer transition-colors">
+<span class="material-symbols-outlined fill">assignment</span>
+<p class="text-sm font-medium leading-normal">Homeworks</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">school</span>
+<p class="text-sm font-medium leading-normal group-hover:text-text-main dark:group-hover:text-white">Classes</p>
+</div>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1 border-t border-border-light dark:border-border-dark pt-4 mb-2">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-background-light dark:text-gray-400 dark:hover:bg-background-dark/50 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined group-hover:text-text-main dark:group-hover:text-white">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</div>
+</div>
+<div class="flex items-center gap-3 px-2 py-3 border-t border-border-light dark:border-border-dark">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-primary/20 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBPOfxEcj2q6dFWmYXuFLYsnW-SK1hZXQddox2BmYPpK2Sc6d_WZZJ9LElYKaPwYRNJAkPxzkE_TKF-oF9RCy4NZpXmpWvSgiZhHTIXv3HHeAORtc0HoVAi8y-rPcLi9-fg8uW7VJbV8wTb_j0UN1MNObKklV6pDFqz0fTN_Xh0a31xC3TXpKg2LNcpKSE9pqFMBN1PbKa72QJWRvDBmfWtNwK5GaRgZUWCuR30lTAlaOhwLOJGlnWZLaTFF-jHGXNMUyBs-UhpPQY");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-sm font-bold text-text-main dark:text-white truncate">Mr. Anderson</p>
+<p class="text-xs text-text-secondary dark:text-gray-400 truncate">Senior Instructor</p>
+</div>
+<button class="text-text-secondary hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<header class="h-16 border-b border-border-light bg-surface-light dark:border-border-dark dark:bg-surface-dark flex items-center justify-between px-6 flex-shrink-0 z-10">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-background-dark border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search lessons, students, or groups..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1 bg-background-light dark:bg-background-dark rounded-full px-1 py-1 border border-border-light dark:border-border-dark">
+<button class="px-3 py-1 rounded-full bg-white dark:bg-surface-dark shadow-sm text-xs font-semibold text-primary">EN</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-text-secondary dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors">AZ</button>
+</div>
+<button class="p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors rounded-full hover:bg-background-light dark:hover:bg-background-dark">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="relative p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-surface-dark"></span>
+</button>
+<button class="p-2 text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-8">
+<div class="mx-auto max-w-6xl flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl md:text-4xl font-bold text-text-main dark:text-white tracking-tight">Homework Management</h1>
+<p class="text-text-secondary dark:text-gray-400 text-base max-w-2xl">Track student submissions and assign new tasks for your groups.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold text-text-main dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">rate_review</span>
+                                Review Uploads
+                            </h2>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-sm font-medium text-text-secondary hover:text-text-main dark:text-gray-400 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                                    Filter
+                                </button>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm">AS</div>
+<div>
+<div class="flex items-center gap-2 mb-0.5">
+<h3 class="text-sm font-bold text-text-main dark:text-white">Alice Smith</h3>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-200 dark:border-gray-700">G001</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-400">Task: Past Perfect Essay • <span class="text-text-main dark:text-white">Unit 5</span></p>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 w-full sm:w-auto">
+<div class="flex flex-col items-start sm:items-end">
+<span class="text-[10px] font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full mb-1">Submitted</span>
+<p class="text-[11px] text-text-secondary dark:text-gray-500">Oct 24, 10:30 AM</p>
+</div>
+<button class="p-2 rounded-lg text-text-secondary hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-sm">BJ</div>
+<div>
+<div class="flex items-center gap-2 mb-0.5">
+<h3 class="text-sm font-bold text-text-main dark:text-white">Bob Jones</h3>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-200 dark:border-gray-700">C015</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-400">Task: Speaking Practice Video • <span class="text-text-main dark:text-white">Week 3</span></p>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 w-full sm:w-auto">
+<div class="flex flex-col items-start sm:items-end">
+<span class="text-[10px] font-semibold text-orange-600 bg-orange-50 dark:bg-orange-900/20 px-2 py-0.5 rounded-full mb-1">Pending Review</span>
+<p class="text-[11px] text-text-secondary dark:text-gray-500">Oct 23, 04:15 PM</p>
+</div>
+<button class="p-2 rounded-lg text-text-secondary hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined">play_circle</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-sm">EL</div>
+<div>
+<div class="flex items-center gap-2 mb-0.5">
+<h3 class="text-sm font-bold text-text-main dark:text-white">Emma Lee</h3>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-200 dark:border-gray-700">P034</span>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-400">Task: IELTS Writing Task 2 • <span class="text-text-main dark:text-white">Mock Test</span></p>
+</div>
+</div>
+<div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 w-full sm:w-auto">
+<div class="flex flex-col items-start sm:items-end">
+<span class="text-[10px] font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full mb-1">Graded (8.5)</span>
+<p class="text-[11px] text-text-secondary dark:text-gray-500">Oct 22, 09:00 AM</p>
+</div>
+<button class="p-2 rounded-lg text-text-secondary hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 text-sm font-medium text-text-secondary hover:text-primary dark:text-gray-400 dark:hover:text-white border-t border-border-light dark:border-border-dark transition-colors">
+                            View All Submissions
+                         </button>
+</div>
+<div class="lg:col-span-1">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-md sticky top-6 overflow-hidden">
+<div class="p-5 border-b border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-surface-dark">
+<h2 class="text-lg font-bold text-text-main dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_task</span>
+                                    Assign New Hometask
+                                </h2>
+</div>
+<div class="p-6">
+<form class="flex flex-col gap-5">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-text-secondary dark:text-gray-400 uppercase tracking-wider">Select Class</label>
+<div class="relative">
+<select class="w-full appearance-none bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-text-main dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all cursor-pointer">
+<option>G001 - Grammar Intensive</option>
+<option>C015 - Conversational Skills</option>
+<option>P034 - IELTS Prep</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-text-secondary dark:text-gray-400 uppercase tracking-wider">Task Title</label>
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-text-main dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400" placeholder="e.g. Workbook Page 42" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-text-secondary dark:text-gray-400 uppercase tracking-wider">Instructions</label>
+<textarea class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-text-main dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none placeholder:text-gray-400" placeholder="Describe the task details here..." rows="4"></textarea>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-semibold text-text-secondary dark:text-gray-400 uppercase tracking-wider">Due Date</label>
+<div class="relative">
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-text-main dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-400" type="date"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 mt-2">
+<label class="text-xs font-semibold text-text-secondary dark:text-gray-400 uppercase tracking-wider">Resources</label>
+<div class="border-2 border-dashed border-border-light dark:border-border-dark rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-background-light dark:hover:bg-background-dark/50 hover:border-primary/50 transition-all group bg-background-light/30 dark:bg-background-dark/30">
+<div class="bg-white dark:bg-surface-dark p-2 rounded-full mb-2 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary">cloud_upload</span>
+</div>
+<p class="text-xs font-medium text-text-main dark:text-white">Click to upload files</p>
+<p class="text-[10px] text-text-secondary dark:text-gray-500 mt-1">PDF, DOCX, JPG up to 10MB</p>
+</div>
+</div>
+<button class="mt-2 w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 flex items-center justify-center gap-2" type="button">
+<span>Assign Task</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Workspace - Oruj's English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .portal-bg {
+            background-color: #060b19;
+            background-image:
+                radial-gradient(circle at 50% 50%, #0e2152 0%, #060b19 100%),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: cover, 40px 40px;
+            background-attachment: fixed, scroll;
+            position: relative;
+        }
+
+        .main-container {
+            background: #11224d;
+            border-radius: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 900px;
+            padding: 4rem;
+        }
+
+        .selection-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            padding: 2.5rem;
+        }
+
+        .selection-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .selection-card:active {
+            transform: scale(0.97);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .icon-teacher {
+            background: rgba(30, 64, 175, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.15);
+        }
+
+        .icon-student {
+            background: rgba(6, 78, 59, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+
+        .lang-switch {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 4px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .lang-option {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+        }
+
+        .lang-option.active {
+            background: white;
+            color: #060b19;
+        }
+
+        .lang-option:not(.active) {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .lang-option:not(.active):hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-note {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            padding: 12px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 3rem;
+        }
+
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+    </style>
+</head>
+
+<body class="portal-bg min-h-screen flex flex-col text-white">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center p-12 absolute top-0 w-full z-10">
+        <div class="font-pacifico text-3xl">Oruj's</div>
+        <div class="lang-switch">
+            <button class="lang-option active">EN</button>
+            <button class="lang-option">AZ</button>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow flex flex-col items-center justify-center p-6 mt-12">
+        <div class="text-center mb-16">
+            <h1 class="text-7xl font-black tracking-tight flex items-baseline justify-center gap-3">
+                <span class="font-pacifico text-5xl font-normal">Oruj's</span>
+                <span class="text-white">English</span>
+            </h1>
+            <p class="text-blue-500 font-black uppercase text-[11px] tracking-[0.5em] mt-4">Portal Login</p>
+        </div>
+
+        <div class="main-container text-center">
+            <h2 class="text-4xl font-extrabold mb-16 tracking-tight">Choose your workspace</h2>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Teacher -->
+                <div onclick="window.location.href='teacher-login.html'"
+                    class="selection-card text-left flex flex-col group">
+                    <div class="icon-box icon-teacher">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path
+                                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 tracking-tight">I am a Teacher</h3>
+                    <p class="text-slate-400 text-[15px] font-medium leading-relaxed">Manage curriculum, track grades
+                        and lessons</p>
+                </div>
+
+                <!-- Student -->
+                <div onclick="window.location.href='login.html'" class="selection-card text-left flex flex-col group">
+                    <div class="icon-box icon-student">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 tracking-tight">I am a Student</h3>
+                    <p class="text-slate-400 text-[15px] font-medium leading-relaxed">Access homework, materials and
+                        progress</p>
+                </div>
+            </div>
+
+            <div class="admin-note">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/30" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-[11px] font-bold text-white/30 uppercase tracking-[0.2em]">Accounts are managed
+                    manually by the administrator.</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="p-12 text-center text-white/20 text-[11px] font-bold uppercase tracking-[0.3em]">
+        © 2024 Oruj's English Portal. Empowering Language Excellence.
+    </footer>
+
+</body>
+
+</html>

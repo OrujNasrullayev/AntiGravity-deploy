@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Record - Oruj's English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body class="bg-[#f5f7fb]">
+
+    <div class="dashboard-container">
+        <!-- Sidebar Match Image 2 -->
+        <aside class="sidebar" style="width: 260px; flex-shrink: 0;">
+            <div class="sidebar-header">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-script text-3xl leading-none text-white">Oruj's</span>
+                </div>
+                <div class="font-black text-[10px] uppercase tracking-[0.3em] text-white/60 mb-8">ENGLISH</div>
+
+                <!-- Profile Card inside Sidebar -->
+                <div class="sidebar-profile-card">
+                    <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg border-2 border-white/20">
+                        <img src="https://i.pravatar.cc/100?u=alex" alt="Alex">
+                    </div>
+                    <div>
+                        <div class="text-xs font-black text-white">Alex Johnson</div>
+                        <div class="text-[9px] font-bold text-white/50 uppercase tracking-widest">Advanced Level</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav flex-grow">
+                <a href="attendance.html" class="sidebar-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Attendance</span>
+                </a>
+                <a href="homework.html" class="sidebar-link">
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            <span>Homework</span>
+                        </div>
+                        <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">2</span>
+                    </div>
+                </a>
+                <a href="feedback.html" class="sidebar-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    <span>Feedback</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer border-t border-slate-100">
+                <a href="login.html" class="sidebar-link opacity-60">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main View -->
+        <main class="view-container">
+            <!-- Header with Search -->
+            <header class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Attendance Record</h1>
+                    <p class="text-slate-400 font-medium text-sm mt-1">Track your progress and lesson history.</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="relative">
+                        <input type="text" placeholder="Search lessons..."
+                            class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm pl-10 w-64 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-4 top-3 text-slate-300"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button
+                        class="relative w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-slate-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 border-2 border-white rounded-full"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Grid Match Image 2 -->
+            <div class="grid lg:grid-cols-3 gap-6 mb-10">
+                <div class="dash-card flex items-center justify-between group cursor-default">
+                    <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Attendance
+                            Rate</div>
+                        <div class="text-4xl font-black text-slate-800">92%</div>
+                        <div class="text-[10px] font-bold text-emerald-500 mt-2 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                            +4% vs last month
+                        </div>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                        </svg>
+                    </div>
+                </div>
+                <div
+                    class="dash-card bg-blue-600 !text-white flex items-center justify-between group cursor-default shadow-xl shadow-blue-100">
+                    <div class="relative z-10">
+                        <div class="text-[10px] font-black text-blue-100 uppercase tracking-widest mb-2">Lessons this
+                            month</div>
+                        <div class="text-4xl font-black">11<span class="text-blue-200 text-xl font-medium">/12</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-blue-100 mt-2">1 lesson remaining</div>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-white/20 text-white rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="dash-card flex items-center justify-between group cursor-default">
+                    <div>
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Missed Lessons
+                        </div>
+                        <div class="text-4xl font-black text-slate-800">1</div>
+                        <div class="text-[10px] font-bold text-slate-400 mt-2">You can request a makeup class.</div>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Record -->
+            <section class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-10">
+                <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-xl font-black text-slate-800 tracking-tight">October 2023</h2>
+                        <div class="flex gap-1">
+                            <button
+                                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button
+                                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        <span class="flex items-center gap-1.5"><span
+                                class="w-2 h-2 rounded-full bg-emerald-500"></span> Attended</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                            Missed</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            Upcoming</span>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <!-- Headers -->
+                    <div class="calendar-day-header">MON</div>
+                    <div class="calendar-day-header">TUE</div>
+                    <div class="calendar-day-header">WED</div>
+                    <div class="calendar-day-header">THU</div>
+                    <div class="calendar-day-header">FRI</div>
+                    <div class="calendar-day-header text-rose-500">SAT</div>
+                    <div class="calendar-day-header text-rose-500">SUN</div>
+
+                    <!-- Row 1 -->
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">25</div>
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">26</div>
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">27</div>
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">28</div>
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">29</div>
+                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">30</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs">1</div>
+
+                    <!-- Row 2 -->
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        2
+                        <span class="calendar-pill pill-green">Grammar 101 <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">3</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        4
+                        <span class="calendar-pill pill-green">Speaking Lab <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">5</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">6</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">7</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">8</div>
+
+                    <!-- Row 3 -->
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        9
+                        <span class="calendar-pill pill-green">Vocab Drill <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">10</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        11
+                        <span class="calendar-pill pill-red">Reading Comp <br> Missed</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">12</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">13</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">14</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">15</div>
+
+                    <!-- Row 4 -->
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        16
+                        <span class="calendar-pill pill-green">Listening <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">17</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        18
+                        <span class="calendar-pill pill-green">Review <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">19</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">20</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">21</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">22</div>
+
+                    <!-- Row 5 (Active Day) -->
+                    <div class="calendar-cell font-black text-slate-800 text-xs">
+                        23
+                        <span class="calendar-pill pill-green">Essay Writing <br> 14:00 - 15:30</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">24</div>
+                    <div
+                        class="calendar-cell font-black text-slate-800 text-xs ring-2 ring-blue-500 ring-inset rounded-lg z-10 scale-[1.02] bg-blue-50/30">
+                        25
+                        <span class="calendar-pill pill-blue">Final Exam <br> 14:00 - 16:00</span>
+                    </div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">26</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">27</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">28</div>
+                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">29</div>
+                </div>
+            </section>
+
+            <!-- Recent Feedback Section -->
+            <section class="space-y-6">
+                <h3 class="text-xl font-black text-slate-800 tracking-tight">Recent Feedback</h3>
+                <div class="grid gap-4">
+                    <div
+                        class="dash-card flex gap-6 animate-fade-in group hover:border-blue-200 transition-all border border-transparent">
+                        <div
+                            class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-black text-slate-800">Mrs. Sarah Smith</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">on Essay
+                                    Writing (Oct 23)</span>
+                            </div>
+                            <p class="text-sm text-slate-500 italic opacity-80">"Alex showed great improvement in
+                                structure. Vocabulary usage was diverse, but watch out for run-on sentences in the
+                                conclusion."</p>
+                        </div>
+                    </div>
+                    <div class="dash-card flex gap-6 animate-fade-in group hover:border-rose-200 transition-all border border-transparent"
+                        style="animation-delay: 0.1s;">
+                        <div
+                            class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-black text-slate-800">System Notification</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-slate-300">Oct
+                                    11</span>
+                            </div>
+                            <p class="text-sm text-slate-500 opacity-80">"You missed 'Reading Comp'. Please schedule a
+                                makeup session before the end of the month."</p>
+                            <a href="#"
+                                class="inline-block mt-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Schedule
+                                Makeup</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>
