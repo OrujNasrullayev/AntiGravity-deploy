@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 // You need to install the Notion client: npm install @notionhq/client
@@ -5,9 +6,13 @@ const path = require('path');
 const { Client } = require('@notionhq/client');
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
-const STUDENTS_DB_ID = '2f96f602-c1e1-8070-b48b-df74a6ae967e';
-const SESSIONS_DB_ID = '2f96f602-c1e1-8006-82fd-ed6c255509bc';
-const GROUPS_DB_ID = '2fb6f602c1e180b9a25ee8f0de16e118';
+const STUDENTS_DB_ID = process.env.NOTION_STUDENTS_ID;
+const SESSIONS_DB_ID = process.env.NOTION_SESSIONS_ID;
+const GROUPS_DB_ID = process.env.NOTION_GROUPS_ID;
+const TEACHERS_DB_ID = process.env.NOTION_TEACHERS_ID;
+const SUBMISSIONS_DB_ID = process.env.NOTION_SUBMISSIONS_ID;
+const ASSIGNMENTS_DB_ID = process.env.NOTION_ASSIGNMENTS_ID;
+const FEEDBACK_DB_ID = process.env.NOTION_FEEDBACK_ID;
 
 if (!NOTION_API_KEY) {
     console.error('Please provide NOTION_API_KEY as an environment variable.');
@@ -147,6 +152,7 @@ async function main() {
 
         return {
             id: humanId,
+            pageId: page.id,
             name: name,
             type: type,
             level: level,
@@ -166,7 +172,6 @@ async function main() {
     console.log(`Fetched ${groupsArray.length} groups.`);
 
     console.log('Fetching Teachers...');
-    const TEACHERS_DB_ID = '2f96f602-c1e1-800b-b6c9-f84975c0a1cc';
     const teacherPages = await fetchAllPages(TEACHERS_DB_ID);
     const teachersArray = teacherPages.map(page => ({
         id: page.properties['Teacher ID']?.formula?.string || 'T000',
@@ -177,7 +182,6 @@ async function main() {
     console.log(`Fetched ${teachersArray.length} teachers.`);
 
     console.log('Fetching Submissions...');
-    const SUBMISSIONS_DB_ID = '2fb6f602-c1e1-802b-90f6-e0cd421b14d7';
     const submissionPages = await fetchAllPages(SUBMISSIONS_DB_ID);
     const submissionsArray = submissionPages.map(page => {
         const studentId = page.properties.Student?.relation[0]?.id;
