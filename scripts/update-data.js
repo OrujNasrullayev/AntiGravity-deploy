@@ -66,8 +66,8 @@ async function main() {
         console.log(`- Student: ${name} | Attendance: ${Math.round(attendanceValue * 100)}% | Classes: ${attendedCount}/${totalCount}`);
 
         const studentObj = {
-            id: rawId,
-            pageId: rawId,
+            id: page.id,        // Strict Notion UUID
+            pageId: page.id,    // Strict Notion UUID
             studentId: page.properties['Student ID']?.formula?.string || 'S000',
             name: name,
             email: page.properties.Email?.email || null,
@@ -76,11 +76,11 @@ async function main() {
             totalLessons: totalCount,
             avatar: avatar
         };
-        studentsMap[rawId] = studentObj;
+        studentsMap[page.id] = studentObj;
         return studentObj;
     });
 
-    console.log(`Successfully fetched ${studentsArray.length} students with updated attendance metrics.`);
+    console.log(`Successfully fetched ${studentsArray.length} students with valid UUIDs.`);
 
     const lessonsArray = lessonPages.map(page => {
         const title = page.properties.Name.title[0]?.plain_text || 'Untitled';
@@ -89,7 +89,7 @@ async function main() {
         const endDate = dateObj?.end;
 
         const type = title.includes('Conversation') ? 'conversation' : 'private';
-        const lessonId = page.properties['Lesson ID']?.formula?.string || page.id;
+        const humanId = page.properties['Lesson ID']?.formula?.string || page.id.substring(0, 8);
         const status = page.properties.Status?.status?.name || 'Scheduled';
 
         let duration = type === 'conversation' ? 60 : 90;
@@ -105,7 +105,8 @@ async function main() {
             .filter(s => s !== undefined);
 
         return {
-            id: lessonId,
+            id: humanId,        // Friendly ID (e.g., CC001)
+            pageId: page.id,    // REAL Notion UUID for API calls
             title: title,
             type: type,
             status: status,
@@ -115,7 +116,6 @@ async function main() {
             isoDate: startDate,
             duration: duration,
             students: enrolledStudents,
-            pageId: page.id,
             rawGroupId: page.properties.Groups?.relation[0]?.id,
         };
     })

@@ -1002,10 +1002,20 @@
                     }
                 });
 
-                const lessonPageId = currentLesson.pageId || currentLesson.id;
+                const lessonPageId = currentLesson.pageId;
 
-                if (!lessonPageId || lessonPageId.startsWith('placeholder')) {
-                    alert('❌ Connection Error: This lesson is missing a valid Notion Page ID. \n\nPlease run "node scripts/update-data.js" to sync your latest data from Notion before marking attendance.');
+                // UUID Validation Regex
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+                if (!lessonPageId || !uuidRegex.test(lessonPageId)) {
+                    alert(`❌ Sync Error: Invalid lesson Page ID (${lessonPageId}).\n\nPlease run "node scripts/update-data.js" with your API key to sync real Notion data before marking attendance.`);
+                    return;
+                }
+
+                // Verify student IDs are also real UUIDs
+                const invalidStudentIds = absentPageIds.filter(id => !uuidRegex.test(id));
+                if (invalidStudentIds.length > 0) {
+                    alert(`❌ Sync Error: One or more students have invalid IDs (${invalidStudentIds[0]}...).\n\nPlease run the sync script to update your local student database.`);
                     return;
                 }
 
