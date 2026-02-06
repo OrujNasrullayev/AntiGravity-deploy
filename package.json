@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@notionhq/client": "^5.9.0",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "node-fetch": "^3.3.2"
   },
   "scripts": {
     "build": "node scripts/update-data.js"

@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const result = dotenv.config();
 if (result.error) { throw result.error; }
 console.log('Loaded Keys:', Object.keys(result.parsed));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const fs = require('fs');
 const path = require('path');
 // You need to install the Notion client: npm install @notionhq/client
@@ -9,13 +10,13 @@ const path = require('path');
 const { Client } = require('@notionhq/client');
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
-const STUDENTS_DB_ID = process.env.NOTION_STUDENTS_ID;
-const SESSIONS_DB_ID = process.env.NOTION_SESSIONS_ID;
-const GROUPS_DB_ID = process.env.NOTION_GROUPS_ID;
-const TEACHERS_DB_ID = process.env.NOTION_TEACHERS_ID;
-const SUBMISSIONS_DB_ID = process.env.NOTION_SUBMISSIONS_ID;
-const ASSIGNMENTS_DB_ID = process.env.NOTION_ASSIGNMENTS_ID;
-const FEEDBACK_DB_ID = process.env.NOTION_FEEDBACK_ID;
+const STUDENTS_DB_ID = process.env.STUDENTS_DATABASE_ID;
+const LESSONS_DB_ID = process.env.LESSONS_DATABASE_ID;
+const GROUPS_DB_ID = process.env.GROUPS_DATABASE_ID;
+const TEACHERS_DB_ID = process.env.TEACHERS_DATABASE_ID;
+const SUBMISSIONS_DB_ID = process.env.SUBMISSIONS_DATABASE_ID;
+const ASSIGNMENTS_DB_ID = process.env.ASSIGNMENTS_DATABASE_ID;
+const FEEDBACK_DB_ID = process.env.FEEDBACKS_DATABSE_ID; // Note: typo 'DATABSE' from .env
 
 if (!NOTION_API_KEY) {
     console.error('Please provide NOTION_API_KEY as an environment variable.');
@@ -25,27 +26,97 @@ if (!NOTION_API_KEY) {
 
 const notion = new Client({ auth: NOTION_API_KEY });
 
+// Helper to ensure IDs are formatted as proper UUIDs with dashes
+function formatId(id) {
+    if (!id) return id;
+    const clean = id.split('?')[0].trim().replace(/-/g, '');
+    if (clean.length === 32) {
+        return `${clean.slice(0, 8)}-${clean.slice(8, 12)}-${clean.slice(12, 16)}-${clean.slice(16, 20)}-${clean.slice(20)}`;
+    }
+    return id; // Return original if not 32 chars (might already be formatted or invalid)
+}
+
 async function fetchAllPages(databaseId) {
+    if (!databaseId) {
+        console.error('❌ Error: databaseId is undefined!');
+        return [];
+    }
+
+    // Ensure ID has dashes for proper UUID format
+    const cleanId = formatId(databaseId);
+    console.log(`📡 Fetching from Database ID: ${cleanId}`);
+
     let pages = [];
     let cursor = undefined;
     while (true) {
-        const response = await notion.request({
-            path: `databases/${databaseId}/query`,
-            method: 'POST',
-            body: {
-                start_cursor: cursor,
-            },
-        });
-        pages.push(...response.results);
-        if (!response.has_more) break;
-        cursor = response.next_cursor;
+        try {
+            const url = `https://api.notion.com/v1/databases/${cleanId}/query`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${NOTION_API_KEY}`,
+                    'Notion-Version': '2022-06-28',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    start_cursor: cursor
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Specific handling for "Multiple Data Sources" error (Common with Linked Views)
+                if (data.message && data.message.includes('multiple data sources')) {
+                    console.error(`❌ Error Description: This Database ID points to a Linked View or Collection View, which the API cannot read directly.`);
+                    console.error(`👉 SOLUTION: Please verify your .env file. You must use the ID of the ORIGINAL source database, not a view.`);
+                } else {
+                    console.error(`❌ API Error for ${cleanId}:`, data.message || response.statusText);
+                }
+                break;
+            }
+
+            pages.push(...data.results);
+            if (!data.has_more) break;
+            cursor = data.next_cursor;
+        } catch (error) {
+            console.error(`❌ Network Error for database ${cleanId}:`, error.message);
+            break;
+        }
     }
     return pages;
 }
 
 async function main() {
+    try {
+        console.log('🔍 Testing Notion connection...');
+        const me = await notion.users.me();
+        console.log(`✅ Connected as: ${me.name || 'Integration'}`);
+    } catch (e) {
+        console.error('❌ Authentication failed! Check your NOTION_API_KEY in .env');
+        console.error('Error:', e.message);
+        return;
+    }
+
     console.log('Fetching Lessons...');
-    const lessonPages = await fetchAllPages(SESSIONS_DB_ID);
+    const lessonPages = await fetchAllPages(LESSONS_DB_ID);
+
+    if (lessonPages.length > 0) {
+        console.log('✅ Found lessons. Inspecting properties of the first lesson:');
+        const props = lessonPages[0].properties;
+        console.log('Keys:', Object.keys(props));
+        // Optional: print specific ones to verify structure
+        // console.log(JSON.stringify(props, null, 2));
+    } else {
+        console.log('⚠️ No lessons found! This might mean the database is empty or the ID is for a view, not the DB.');
+        try {
+            // Debug the database schema itself
+            const cleanId = formatId(LESSONS_DB_ID).trim().replace(/-/g, '');
+            const dbRef = await notion.databases.retrieve({ database_id: cleanId });
+            console.log(`🔍 Database Schema for "${dbRef.title[0]?.plain_text}":`);
+            console.log('Property Names:', Object.keys(dbRef.properties));
+        } catch (e) { /* ignore */ }
+    }
 
     console.log('Fetching Students...');
     const studentPages = await fetchAllPages(STUDENTS_DB_ID);
