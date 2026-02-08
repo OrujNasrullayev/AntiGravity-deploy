@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
 require('dotenv').config();
-// This will load the file if it exists (locally), 
-// but won't crash if it doesn't (on Netlify).
-console.log('Loaded Keys:', Object.keys(result.parsed));
+
+// We removed the result variable to prevent crashing on Netlify
+console.log('🔍 Testing Notion connection...');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const fs = require('fs');
 const path = require('path');
