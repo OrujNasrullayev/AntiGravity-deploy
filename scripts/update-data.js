@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
-const result = dotenv.config();
-if (result.error) { throw result.error; }
+require('dotenv').config();
+// This will load the file if it exists (locally), 
+// but won't crash if it doesn't (on Netlify).
 console.log('Loaded Keys:', Object.keys(result.parsed));
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const fs = require('fs');
