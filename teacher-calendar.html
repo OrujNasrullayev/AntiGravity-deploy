@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
     <script src="assets/js/lessons.js"></script>
+    <script src="assets/js/portal-logic.js"></script>
+    <script src="assets/js/main.js"></script>
     <style>
         .calendar-container {
             position: relative;
@@ -388,6 +390,63 @@
             let currentDate = new Date();
             let currentViewLessons = new Map();
             let currentLesson = null; // Track currently open lesson
+
+            function getStartOfMonth(date) {
+                return new Date(date.getFullYear(), date.getMonth(), 1);
+            }
+
+            function getLessonsForDate(date) {
+                if (typeof NOTION_LESSONS === 'undefined' || !Array.isArray(NOTION_LESSONS)) return [];
+
+                return NOTION_LESSONS.filter(l => {
+                    if (!l.isoDate) return false;
+                    const lDate = new Date(l.isoDate);
+                    return lDate.getDate() === date.getDate() &&
+                        lDate.getMonth() === date.getMonth() &&
+                        lDate.getFullYear() === date.getFullYear();
+                }).map(l => {
+                    // Enrich with calculated fields for UI
+                    const d = new Date(l.isoDate);
+                    const hours = d.getHours().toString().padStart(2, '0');
+                    const minutes = d.getMinutes().toString().padStart(2, '0');
+                    const startTime = `${hours}:${minutes}`;
+
+                    // Generate instanceId needed for modal opening
+                    const instanceId = l.pageId + '_' + d.getTime();
+
+                    return {
+                        ...l,
+                        startTime,
+                        instanceId
+                    };
+                }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+            }
+
+            function getLessonTimeString(startTime, duration) {
+                if (!startTime) return 'TBD';
+                const [h, m] = startTime.split(':').map(Number);
+                const start = new Date();
+                start.setHours(h, m, 0, 0);
+                const end = new Date(start.getTime() + duration * 60000);
+
+                const formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `${formatTime(start)} - ${formatTime(end)}`;
+            }
+
+            function getLessonSubtitle(type) {
+                return type === 'conversation' ? 'Conversation Practice' : 'Private Lesson';
+            }
+
+            function updateTimeLine() {
+                // Implementation for red current-time line if needed
+                const now = new Date();
+                // Logic can be added here if red line element exists
+            }
+
+            function getCurrentScrollPosition() {
+                // Default scroll to 8 AM (approx 60px * 1)
+                return 0; // or calculate based on time
+            }
 
             function formatMonthYear(date) {
                 return date.toLocaleString('default', { month: 'long', year: 'numeric' });

@@ -199,6 +199,11 @@ async function main() {
 
     console.log('Fetching Groups...');
     const groupPages = await fetchAllPages(GROUPS_DB_ID);
+
+    if (groupPages.length > 0) {
+        console.log('🔍 First Group Properties:', Object.keys(groupPages[0].properties));
+    }
+
     const groupIdsMap = {};
 
     const groupsArray = groupPages.map(page => {
@@ -206,9 +211,33 @@ async function main() {
         const type = name.includes('Conversation') ? 'conversation' : 'private';
         const levelMatch = name.match(/(Beginner|Intermediate|Advanced)/i);
         const level = levelMatch ? levelMatch[0] : 'General';
-        const humanId = page.properties['ID']?.unique_id?.prefix
-            ? `${page.properties['ID'].unique_id.prefix}${page.properties['ID'].unique_id.number}`
-            : page.id.substring(0, 5);
+
+        // Try multiple potential ID fields
+        let humanId = page.id.substring(0, 5); // Default fallback
+
+        // Log properties to help debug
+        // console.log(`Group: ${name}, Props:`, Object.keys(page.properties));
+
+        if (page.properties['ID']?.unique_id) {
+            const prefix = page.properties['ID'].unique_id.prefix;
+            const number = page.properties['ID'].unique_id.number;
+            // If prefix exists, use it. If not, maybe use a default or just the number?
+            // User wants "C001" or "P001". If prefix is null, we might need to infer it from type.
+            if (prefix) {
+                humanId = `${prefix}${number}`;
+            } else {
+                // Infer prefix if missing? Or just show number? User says they show "1" and "2".
+                // Let's try to map type to prefix if missing.
+                const inferredPrefix = type === 'conversation' ? 'C' : 'P';
+                humanId = `${inferredPrefix}${String(number).padStart(3, '0')}`;
+            }
+        } else if (page.properties['Group ID']?.formula?.string) {
+            humanId = page.properties['Group ID'].formula.string;
+        } else if (page.properties['Code']?.rich_text?.[0]?.plain_text) {
+            humanId = page.properties['Code'].rich_text[0].plain_text;
+        }
+
+        console.log(`   Group "${name}" assigned ID: ${humanId}`);
 
         groupIdsMap[page.id] = humanId;
 

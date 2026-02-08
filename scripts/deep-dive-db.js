@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client } = require('@notionhq/client');
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
-const DB_ID = '2f96f602c1e1800682fded6c255509bc';
+const DB_ID = '2ff6f602c1e1804d8b57d96741933b67';
 
 async function deepDive() {
     console.log(`🤿 Deep diving into Database: ${DB_ID}`);
