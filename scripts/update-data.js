@@ -51,6 +51,11 @@ async function fetchAllPages(databaseId) {
     while (true) {
         try {
             const url = `https://api.notion.com/v1/databases/${cleanId}/query`;
+
+            // Construct body: don't send start_cursor if undefined
+            const bodyPayload = {};
+            if (cursor) bodyPayload.start_cursor = cursor;
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -58,20 +63,18 @@ async function fetchAllPages(databaseId) {
                     'Notion-Version': '2022-06-28',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    start_cursor: cursor
-                })
+                body: JSON.stringify(bodyPayload)
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                // Specific handling for "Multiple Data Sources" error (Common with Linked Views)
-                if (data.message && data.message.includes('multiple data sources')) {
-                    console.error(`❌ Error Description: This Database ID points to a Linked View or Collection View, which the API cannot read directly.`);
-                    console.error(`👉 SOLUTION: Please verify your .env file. You must use the ID of the ORIGINAL source database, not a view.`);
-                } else {
-                    console.error(`❌ API Error for ${cleanId}:`, data.message || response.statusText);
+                console.error(`❌ API Error for ${cleanId}:`);
+                console.error(`   Status: ${response.status}`);
+                console.error(`   Response:`, JSON.stringify(data, null, 2));
+
+                if (data.code === 'object_not_found') {
+                    console.log('   👉 Hint: Check access permissions or if ID is correct.');
                 }
                 break;
             }
@@ -102,20 +105,9 @@ async function main() {
     const lessonPages = await fetchAllPages(LESSONS_DB_ID);
 
     if (lessonPages.length > 0) {
-        console.log('✅ Found lessons. Inspecting properties of the first lesson:');
-        const props = lessonPages[0].properties;
-        console.log('Keys:', Object.keys(props));
-        // Optional: print specific ones to verify structure
-        // console.log(JSON.stringify(props, null, 2));
+        console.log(`✅ Successfully fetched ${lessonPages.length} lessons.`);
     } else {
-        console.log('⚠️ No lessons found! This might mean the database is empty or the ID is for a view, not the DB.');
-        try {
-            // Debug the database schema itself
-            const cleanId = formatId(LESSONS_DB_ID).trim().replace(/-/g, '');
-            const dbRef = await notion.databases.retrieve({ database_id: cleanId });
-            console.log(`🔍 Database Schema for "${dbRef.title[0]?.plain_text}":`);
-            console.log('Property Names:', Object.keys(dbRef.properties));
-        } catch (e) { /* ignore */ }
+        console.log('⚠️ No lessons found! Please check if the database is empty or permissions are correct.');
     }
 
     console.log('Fetching Students...');
