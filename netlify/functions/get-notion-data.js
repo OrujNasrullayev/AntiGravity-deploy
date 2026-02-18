@@ -50,10 +50,12 @@ async function fetchAllPages(notion, databaseId) {
 }
 
 exports.handler = async (event, context) => {
-    // Initialize Notion Client
-    // Robust check for Client constructor location
-    const Client = Notion.Client || Notion;
+    // This looks at every possible place the Client could be hiding
+    const Client = Notion.Client || (Notion.default ? Notion.default.Client : Notion);
     const notion = new Client({ auth: process.env.NOTION_API_KEY });
+
+    // DEBUG LOG: Let's see what 'notion' actually looks like in the logs
+    console.log("Notion object keys:", Object.keys(notion));
 
     try {
         console.log('📡 Fetching data from Notion...');
