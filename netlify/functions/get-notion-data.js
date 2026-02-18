@@ -18,12 +18,6 @@ function formatId(id) {
 exports.handler = async (event, context) => {
     const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
-    // 3. ADD THIS SPECIFIC DEBUG LOG
-    console.log("Checking databases tool:", typeof notion.databases);
-    console.log("Checking query tool:", notion.databases ? typeof notion.databases.query : 'no databases');
-    console.log('Available database methods:', Object.keys(notion.databases));
-    console.log('Build Cache Bust:', 'v2.2.1-refetch-12345');
-
     // Inline database fetcher
     const queryDb = async (id) => {
         const cleanId = formatId(id);
@@ -44,8 +38,6 @@ exports.handler = async (event, context) => {
     };
 
     try {
-        console.log('📡 Fetching data from Notion...');
-
         // 1. Fetch all datasets in parallel
         const [
             studentPages,
