@@ -1,15 +1,5 @@
 const Notion = require('@notionhq/client');
 
-// Database IDs from environment variables
-const DB_IDS = {
-    STUDENTS: process.env.STUDENTS_DATABASE_ID,
-    LESSONS: process.env.LESSONS_DATABASE_ID,
-    GROUPS: process.env.GROUPS_DATABASE_ID,
-    TEACHERS: process.env.TEACHERS_DATABASE_ID,
-    SUBMISSIONS: process.env.SUBMISSIONS_DATABASE_ID,
-    ASSIGNMENTS: process.env.ASSIGNMENTS_DATABASE_ID,
-    FEEDBACKS: process.env.FEEDBACKS_DATABASE_ID || process.env.FEEDBACKS_DATABASE_ID
-};
 
 /**
  * Ensures IDs are formatted as proper UUIDs with dashes
@@ -33,6 +23,10 @@ async function fetchAllPages(notion, databaseId) {
     }
 
     const cleanId = formatId(databaseId);
+    if (!cleanId) {
+        console.warn(`⚠️ Skipping fetch: invalid or empty formatted databaseId`);
+        return [];
+    }
     let pages = [];
     let cursor = undefined;
 
@@ -56,6 +50,17 @@ exports.handler = async (event, context) => {
 
     // DEBUG LOG: Let's see what 'notion' actually looks like in the logs
     console.log("Notion object keys:", Object.keys(notion));
+
+    // Database IDs from environment variables
+    const DB_IDS = {
+        STUDENTS: process.env.STUDENTS_DATABASE_ID,
+        LESSONS: process.env.LESSONS_DATABASE_ID,
+        GROUPS: process.env.GROUPS_DATABASE_ID,
+        TEACHERS: process.env.TEACHERS_DATABASE_ID,
+        SUBMISSIONS: process.env.SUBMISSIONS_DATABASE_ID,
+        ASSIGNMENTS: process.env.ASSIGNMENTS_DATABASE_ID,
+        FEEDBACKS: process.env.FEEDBACKS_DATABASE_ID || process.env.FEEDBACKS_DATABASE_ID
+    };
 
     try {
         console.log('📡 Fetching data from Notion...');
