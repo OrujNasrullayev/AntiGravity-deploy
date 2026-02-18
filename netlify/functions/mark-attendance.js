@@ -1,4 +1,4 @@
-console.log("--- VERSION 2.0 TRIGGERED ---");
+console.log("--- VERSION 2.0 TRIGGERED FR---");
 const { Client } = require('@notionhq/client');
 
 exports.handler = async (event, context) => {
