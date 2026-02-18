@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homework Tasks - Oruj's English</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/data-loader.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        Auth.checkAuth('student');
+    </script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -23,11 +28,13 @@
                 <!-- Profile Card inside Sidebar -->
                 <div class="sidebar-profile-card">
                     <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg border-2 border-white/20">
-                        <img src="https://i.pravatar.cc/100?u=alex" alt="Alex">
+                        <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=Student&background=random"
+                            alt="Profile">
                     </div>
                     <div>
-                        <div class="text-xs font-black text-white">Alex Johnson</div>
-                        <div class="text-[9px] font-bold text-white/50 uppercase tracking-widest">Advanced Level</div>
+                        <div id="sidebar-name" class="text-xs font-black text-white">Loading...</div>
+                        <div id="sidebar-role" class="text-[9px] font-bold text-white/50 uppercase tracking-widest">
+                            Student</div>
                     </div>
                 </div>
             </div>
@@ -65,15 +72,30 @@
             </nav>
 
             <div class="sidebar-footer border-t border-slate-100 pb-10">
-                <a href="login.html" class="sidebar-link opacity-60">
+                <button id="logout-btn" class="sidebar-link opacity-60 w-full text-left">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     <span>Logout</span>
-                </a>
+                </button>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const user = Auth.getCurrentUser();
+                    if (user) {
+                        document.getElementById('sidebar-name').textContent = user.name;
+                        document.getElementById('sidebar-avatar').src = user.avatar;
+                    }
+
+                    document.getElementById('logout-btn').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        Auth.logout();
+                    });
+                });
+            </script>
         </aside>
 
         <!-- Main View -->
@@ -114,12 +136,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                DUE TOMORROW
+                                <span id="hero-due-date">LOADING...</span>
                             </div>
-                            <h2 class="text-4xl font-script mb-4">Homework for Next Lesson</h2>
-                            <p class="text-blue-100 text-sm font-medium leading-relaxed opacity-80 mb-8">
-                                Complete the grammar exercises on "Present Perfect Continuous" and watch the assigned
-                                video clip.
+                            <h2 id="hero-title" class="text-4xl font-script mb-4">Loading next assignment...</h2>
+                            <p id="hero-description"
+                                class="text-blue-100 text-sm font-medium leading-relaxed opacity-80 mb-8">
+                                Please wait while we fetch your latest tasks.
                             </p>
                             <div class="flex gap-4">
                                 <button
@@ -148,11 +170,12 @@
                             <svg class="w-full h-full" viewBox="0 0 100 100">
                                 <circle class="text-white/10" stroke-width="10" stroke="currentColor" fill="transparent"
                                     r="40" cx="50" cy="50" />
-                                <circle class="text-white progress-ring__circle" stroke-width="10"
-                                    stroke-dasharray="251.2" stroke-dashoffset="188.4" stroke-linecap="round"
-                                    stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+                                <circle id="hero-progress-ring" class="text-white progress-ring__circle"
+                                    stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2"
+                                    stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50"
+                                    cy="50" />
                             </svg>
-                            <span class="absolute text-3xl font-black text-white">25%</span>
+                            <span id="hero-progress-text" class="absolute text-3xl font-black text-white">0%</span>
                         </div>
                     </div>
 
@@ -171,53 +194,9 @@
                             </button>
                         </div>
 
-                        <div class="space-y-4">
-                            <!-- Assignment 1 -->
-                            <div
-                                class="flex items-center justify-between p-4 rounded-3xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group">
-                                <div class="flex items-center gap-6">
-                                    <div
-                                        class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-sm font-black text-slate-800">Read Chapter 4: "The Great
-                                            Adventure"</div>
-                                        <div
-                                            class="flex gap-4 mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-[0.05em]">
-                                            <span class="flex items-center gap-1.5"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg> Due Oct 24</span>
-                                            <span class="flex items-center gap-1.5"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg> 20 mins</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span
-                                        class="bg-yellow-50 text-yellow-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">Pending</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5 text-slate-300 group-hover:text-slate-500 transition-colors"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <!-- More assignments... -->
+                        <div id="assignments-list" class="space-y-4">
+                            <!-- Dynamic Content -->
+                            <div class="text-slate-400 text-sm italic py-4">Loading assignments...</div>
                         </div>
                         <div class="mt-10 pt-6 border-t border-slate-50 text-center">
                             <a href="#"
@@ -230,84 +209,31 @@
                 <!-- Right Column (Span 4) -->
                 <div class="lg:col-span-4 space-y-8">
                     <!-- Task Detail Panel -->
-                    <div class="task-detail-panel">
+                    <div id="task-detail-panel" class="task-detail-panel opacity-50 pointer-events-none">
                         <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">Selected Task
                             Details</h3>
-                        <span class="tag-grammar mb-4 inline-block">Grammar</span>
-                        <h4 class="text-xl font-black text-slate-800 mb-4 leading-tight">Present Perfect Continuous</h4>
-                        <p class="text-[13px] text-slate-500 font-medium leading-relaxed mb-8">
-                            Watch the video explanation and complete the attached worksheet. Focus on the difference
-                            between "for" and "since".
+                        <span id="detail-type" class="tag-grammar mb-4 inline-block">Type</span>
+                        <h4 id="detail-title" class="text-xl font-black text-slate-800 mb-4 leading-tight">Select a task
+                        </h4>
+                        <p id="detail-description" class="text-[13px] text-slate-500 font-medium leading-relaxed mb-8">
+                            Click on an assignment from the list to see more details and resources.
                         </p>
 
                         <!-- Media Links -->
-                        <div class="space-y-4 mb-10">
-                            <div
-                                class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl group cursor-pointer hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200">
-                                <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-10 h-10 bg-rose-100 text-rose-500 rounded-xl flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-[11px] font-black text-slate-800">Introduction Video.mp4</div>
-                                        <div class="text-[9px] font-bold text-slate-400 mt-0.5">12:45 mins</div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor"
-                                        viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div
-                                class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl group cursor-pointer hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200">
-                                <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-[11px] font-black text-slate-800">Practice Worksheet.pdf</div>
-                                        <div class="text-[9px] font-bold text-slate-400 mt-0.5">2.4 MB</div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-slate-100 group-hover:text-slate-800 transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                    </svg>
-                                </div>
-                            </div>
+                        <div id="detail-attachments" class="space-y-4 mb-10">
+                            <!-- Dynamic Attachments -->
                         </div>
 
                         <!-- Teacher's Note -->
                         <div class="mb-10">
                             <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Teacher's
                                 Note:</div>
-                            <div class="teacher-note-box">
-                                "Don't forget to review the irregular verbs list on page 45 before starting this." - Mr.
-                                Anderson
+                            <div id="detail-note" class="teacher-note-box italic">
+                                "Keep up the hard work!"
                             </div>
                         </div>
 
-                        <button class="btn-homework-primary shadow-xl shadow-blue-900/10">
+                        <button id="mark-complete-btn" class="btn-homework-primary shadow-xl shadow-blue-900/10">
                             Mark as Completed
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -328,7 +254,7 @@
                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <div class="text-2xl font-black text-slate-800">12</div>
+                            <div id="stats-completed" class="text-2xl font-black text-slate-800">0</div>
                             <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Done this
                                 month</div>
                         </div>
@@ -338,10 +264,10 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <div class="text-2xl font-black text-slate-800">3</div>
+                            <div id="stats-remaining" class="text-2xl font-black text-slate-800">0</div>
                             <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Remaining
                             </div>
                         </div>
@@ -351,12 +277,149 @@
         </main>
     </div>
 
-    <!-- Theme Toggle -->
-    <button class="theme-toggle">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-        </svg>
-    </button>
+    <script>
+        async function init() {
+            await DataLoader.waitForData();
+            const user = Auth.getCurrentUser();
+            if (!user) return;
+
+            // 1. Get all lessons for this student
+            const myLessons = Auth.filterData(NOTION_LESSONS);
+
+            // 2. Identify all assignment IDs linked to these lessons
+            const linkedAssignmentIds = new Set();
+            myLessons.forEach(lesson => {
+                if (lesson.homeworkIds) {
+                    lesson.homeworkIds.forEach(id => linkedAssignmentIds.add(id));
+                }
+            });
+
+            // 3. Filter assignments and check submission status
+            const mySubmissions = Auth.filterData(NOTION_SUBMISSIONS, 'submissions');
+            const myAssignments = NOTION_ASSIGNMENTS.filter(a => linkedAssignmentIds.has(a.id))
+                .map(a => {
+                    const submission = mySubmissions.find(s => s.assignmentId === a.id);
+                    return {
+                        ...a,
+                        status: submission ? submission.status : 'Pending',
+                        submissionDate: submission ? submission.date : null
+                    };
+                });
+
+            // 4. Update Stats
+            const completed = myAssignments.filter(a => a.status === 'Completed' || a.status === 'Graded').length;
+            const remaining = myAssignments.length - completed;
+            document.getElementById('stats-completed').textContent = completed;
+            document.getElementById('stats-remaining').textContent = remaining;
+
+            // 5. Populate Hero (Next assignment)
+            const upcoming = myAssignments
+                .filter(a => a.status === 'Pending')
+                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            if (upcoming.length > 0) {
+                const next = upcoming[0];
+                document.getElementById('hero-title').textContent = next.title;
+                document.getElementById('hero-description').textContent = next.description;
+                document.getElementById('hero-due-date').textContent = next.dueDate ? `DUE ${new Date(next.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase()}` : 'NO DUE DATE';
+
+                // Progress
+                const progress = myAssignments.length > 0 ? Math.round((completed / myAssignments.length) * 100) : 0;
+                document.getElementById('hero-progress-text').textContent = progress + '%';
+                const offset = 251.2 - (251.2 * progress / 100);
+                document.getElementById('hero-progress-ring').style.strokeDashoffset = offset;
+            } else {
+                document.getElementById('hero-title').textContent = "All caught up!";
+                document.getElementById('hero-description').textContent = "You have no pending assignments. Great job!";
+                document.getElementById('hero-due-date').textContent = "DONE";
+                document.getElementById('hero-progress-text').textContent = '100%';
+                document.getElementById('hero-progress-ring').style.strokeDashoffset = 0;
+            }
+
+            // 6. Populate List
+            const list = document.getElementById('assignments-list');
+            if (myAssignments.length > 0) {
+                list.innerHTML = '';
+                myAssignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).forEach(a => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-4 rounded-3xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group cursor-pointer';
+                    div.onclick = () => showDetails(a);
+
+                    const statusClass = a.status === 'Pending' ? 'bg-yellow-50 text-yellow-600' : 'bg-emerald-50 text-emerald-600';
+
+                    div.innerHTML = `
+                        <div class="flex items-center gap-6">
+                            <div class="w-12 h-12 ${a.type === 'Reading' ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'} rounded-2xl flex items-center justify-center">
+                                ${a.type === 'Reading' ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>'}
+                            </div>
+                            <div>
+                                <div class="text-sm font-black text-slate-800">${a.title}</div>
+                                <div class="flex gap-4 mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-[0.05em]">
+                                    <span class="flex items-center gap-1.5">Due ${a.dueDate ? new Date(a.dueDate).toLocaleDateString() : 'TBD'}</span>
+                                    <span class="flex items-center gap-1.5">${a.duration} mins</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <span class="${statusClass} px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.status}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-300 group-hover:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+
+                // Show first by default
+                showDetails(myAssignments[0]);
+            } else {
+                list.innerHTML = '<div class="text-slate-400 text-sm italic py-4">No assignments found for your lessons.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        function showDetails(a) {
+            const panel = document.getElementById('task-detail-panel');
+            panel.classList.remove('opacity-50', 'pointer-events-none');
+
+            document.getElementById('detail-type').textContent = a.type;
+            document.getElementById('detail-title').textContent = a.title;
+            document.getElementById('detail-description').textContent = a.description;
+
+            const attachments = document.getElementById('detail-attachments');
+            attachments.innerHTML = '';
+            if (a.attachmentUrl) {
+                const name = a.attachmentUrl.split('/').pop().split('?')[0] || 'Attachment';
+                attachments.innerHTML = `
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl group cursor-pointer hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200" onclick="window.open('${a.attachmentUrl}', '_blank')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-[11px] font-black text-slate-800">${decodeURIComponent(name)}</div>
+                                <div class="text-[9px] font-bold text-slate-400 mt-0.5">Click to view</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                attachments.innerHTML = '<div class="text-[11px] text-slate-400 font-medium">No attachments available.</div>';
+            }
+
+            const btn = document.getElementById('mark-complete-btn');
+            if (a.status === 'Completed' || a.status === 'Graded') {
+                btn.textContent = 'Completed';
+                btn.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                btn.textContent = 'Mark as Completed';
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+    </script>
 
 </body>
 

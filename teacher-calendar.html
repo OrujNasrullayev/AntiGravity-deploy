@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Portal - Calendar</title>
+    <title>Teacher Calendar - Oruj's English</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
+    <script src="assets/js/data-loader.js"></script>
+    <script src="assets/js/auth.js"></script>
     <script src="assets/js/lessons.js"></script>
-    <script src="assets/js/portal-logic.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        Auth.checkAuth('teacher');
+    </script>
     <script src="assets/js/main.js"></script>
     <style>
         .calendar-container {
@@ -190,25 +195,51 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                    <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile"
                         class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                        <div id="sidebar-name" class="text-sm font-bold text-[#0f172a]">Loading...</div>
+                        <div id="sidebar-role" class="text-[10px] font-bold text-slate-400 uppercase">Instructor</div>
                     </div>
-                    <a href="teacher-login.html" class="ml-auto text-slate-400 hover:text-red-500">
+                    <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const user = Auth.getCurrentUser();
+                    if (user) {
+                        document.getElementById('sidebar-name').textContent = user.name;
+                        document.getElementById('sidebar-avatar').src = user.avatar;
+                        // document.getElementById('sidebar-role').textContent = user.role.toUpperCase();
+                    }
+
+                    document.getElementById('logout-btn').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        Auth.logout();
+                    });
+                });
+            </script>
         </aside>
 
         <!-- Main Content -->
-        <main class="teacher-main !px-10 !py-8">
+        <main class="flex-grow p-4 lg:p-8 overflow-x-hidden relative">
+            <!-- Loading Overlay -->
+            <div id="loading-overlay"
+                class="absolute inset-0 z-[100] bg-white/80 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin">
+                    </div>
+                    <p class="text-blue-600 font-bold text-sm uppercase tracking-widest animate-pulse">Loading Notion
+                        Data...</p>
+                </div>
+            </div>
             <!-- Header -->
             <header class="flex justify-between items-center mb-8">
                 <div class="relative">
@@ -398,7 +429,10 @@
             function getLessonsForDate(date) {
                 if (typeof NOTION_LESSONS === 'undefined' || !Array.isArray(NOTION_LESSONS)) return [];
 
-                return NOTION_LESSONS.filter(l => {
+                // Filter by teacher first
+                const filteredLessons = Auth.filterData(NOTION_LESSONS);
+
+                return filteredLessons.filter(l => {
                     if (!l.isoDate) return false;
                     const lDate = new Date(l.isoDate);
                     return lDate.getDate() === date.getDate() &&
@@ -814,52 +848,81 @@
                 }
             });
 
-            // Modal Functions
-            window.openLessonModal = function (instanceId) {
-                currentLesson = currentViewLessons.get(instanceId);
-                if (!currentLesson) return;
-                renderLessonDetails();
-                modal.classList.remove('hidden');
+            // Initial render
+            async function init() {
+                try {
+                    // Check auth first
+                    const user = Auth.checkAuth('teacher');
+                    if (!user) return;
+
+                    // Wait for dynamic data
+                    await DataLoader.waitForData();
+
+                    // Hide loading overlay
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        setTimeout(() => overlay.remove(), 300);
+                    }
+
+                    updateUI();
+
+                    // Refresh time line every minute
+                    setInterval(updateTimeLine, 60000);
+                } catch (error) {
+                    console.error('Initialization failed:', error);
+                }
             }
 
-            // Helper to get subtitle
-            function getLessonSubtitle(type) {
-                const subtitles = {
-                    'group': 'General English Group',
-                    'private': 'One-on-One Private Session',
-                    'conversation': 'Advanced Speaking & Fluency'
-                };
-                return subtitles[type] || 'English Lesson';
-            }
+            init();
+        });
 
-            // Helper to get time string
-            function getLessonTimeString(startTime, duration) {
-                const [startHour, startMin] = startTime.split(':').map(Number);
-                const endDate = new Date();
-                endDate.setHours(startHour, startMin + duration);
-                const endHour = endDate.getHours();
-                const endMin = endDate.getMinutes();
-                const endAmPm = endHour >= 12 ? 'PM' : 'AM';
-                const startAmPm = startHour >= 12 ? 'PM' : 'AM';
-                const displayStartHour = startHour % 12 || 12;
-                const displayEndHour = endHour % 12 || 12;
-                return `${displayStartHour}:${startMin.toString().padStart(2, '0')} ${startAmPm} - ${displayEndHour}:${endMin.toString().padStart(2, '0')} ${endAmPm} `;
-            }
+        // Modal Functions
+        window.openLessonModal = function (instanceId) {
+            currentLesson = currentViewLessons.get(instanceId);
+            if (!currentLesson) return;
+            renderLessonDetails();
+            modal.classList.remove('hidden');
+        }
 
-            // Render Default Details View
-            function renderLessonDetails() {
-                modalPanel.classList.remove('sm:max-w-5xl');
-                modalPanel.classList.add('sm:max-w-md');
+        // Helper to get subtitle
+        function getLessonSubtitle(type) {
+            const subtitles = {
+                'group': 'General English Group',
+                'private': 'One-on-One Private Session',
+                'conversation': 'Advanced Speaking & Fluency'
+            };
+            return subtitles[type] || 'English Lesson';
+        }
 
-                const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
-                const subtitle = getLessonSubtitle(currentLesson.type);
+        // Helper to get time string
+        function getLessonTimeString(startTime, duration) {
+            const [startHour, startMin] = startTime.split(':').map(Number);
+            const endDate = new Date();
+            endDate.setHours(startHour, startMin + duration);
+            const endHour = endDate.getHours();
+            const endMin = endDate.getMinutes();
+            const endAmPm = endHour >= 12 ? 'PM' : 'AM';
+            const startAmPm = startHour >= 12 ? 'PM' : 'AM';
+            const displayStartHour = startHour % 12 || 12;
+            const displayEndHour = endHour % 12 || 12;
+            return `${displayStartHour}:${startMin.toString().padStart(2, '0')} ${startAmPm} - ${displayEndHour}:${endMin.toString().padStart(2, '0')} ${endAmPm} `;
+        }
 
-                // Generate Students List HTML
-                let studentsHtml = '';
-                const students = currentLesson.students || []; // Fallback to empty array
+        // Render Default Details View
+        function renderLessonDetails() {
+            modalPanel.classList.remove('sm:max-w-5xl');
+            modalPanel.classList.add('sm:max-w-md');
 
-                students.forEach((student, index) => {
-                    studentsHtml += `
+            const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
+            const subtitle = getLessonSubtitle(currentLesson.type);
+
+            // Generate Students List HTML
+            let studentsHtml = '';
+            const students = currentLesson.students || []; // Fallback to empty array
+
+            students.forEach((student, index) => {
+                studentsHtml += `
                         <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg transition-colors">
                             <div class="flex items-center gap-3">
                                 <img src="${student.avatar}" class="w-8 h-8 rounded-full border border-slate-100" alt="${student.name}">
@@ -868,9 +931,9 @@
                             <div class="w-5 h-5 rounded-full border-2 border-slate-200 cursor-pointer hover:border-[#2563eb]"></div>
                         </div>
                     `;
-                });
+            });
 
-                modalContent.innerHTML = `
+            modalContent.innerHTML = `
                     <!-- Blue Header -->
                     <div class="bg-[#2563eb] p-6 text-white relative">
                         <button onclick="closeModal()" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
@@ -923,22 +986,22 @@
                                 </div>
                             </div>
                         `;
-            }
+        }
 
-            // Render Split Attendance View
-            window.renderAttendanceView = function () {
-                modalPanel.classList.remove('sm:max-w-md');
-                modalPanel.classList.add('sm:max-w-5xl');
+        // Render Split Attendance View
+        window.renderAttendanceView = function () {
+            modalPanel.classList.remove('sm:max-w-md');
+            modalPanel.classList.add('sm:max-w-5xl');
 
-                const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
-                const subtitle = getLessonSubtitle(currentLesson.type);
+            const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
+            const subtitle = getLessonSubtitle(currentLesson.type);
 
-                // Students for Attendance List
-                let attendanceRowsHtml = '';
-                const students = currentLesson.students || [];
+            // Students for Attendance List
+            let attendanceRowsHtml = '';
+            const students = currentLesson.students || [];
 
-                students.forEach((student, index) => {
-                    attendanceRowsHtml += `
+            students.forEach((student, index) => {
+                attendanceRowsHtml += `
                         <div class="bg-white border border-slate-100 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                             <div class="flex items-center gap-3">
                                 <img src="${student.avatar}" class="w-10 h-10 rounded-full border border-slate-100" alt="${student.name}">
@@ -950,22 +1013,22 @@
                             </div>
                         </div>
                             `;
-                });
+            });
 
-                // Avatars for Left Panel
-                let avatarsHtml = '<div class="flex -space-x-2 overflow-hidden py-2">';
-                const displayedStudents = students.slice(0, 5);
+            // Avatars for Left Panel
+            let avatarsHtml = '<div class="flex -space-x-2 overflow-hidden py-2">';
+            const displayedStudents = students.slice(0, 5);
 
-                displayedStudents.forEach(student => {
-                    avatarsHtml += `<img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="${student.avatar}" alt="${student.name}" />`;
-                });
+            displayedStudents.forEach(student => {
+                avatarsHtml += `<img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="${student.avatar}" alt="${student.name}" />`;
+            });
 
-                if (students.length > 5) {
-                    avatarsHtml += `<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 text-[10px] font-bold text-slate-500">+${students.length - 5}</div>`;
-                }
-                avatarsHtml += '</div>';
+            if (students.length > 5) {
+                avatarsHtml += `<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 text-[10px] font-bold text-slate-500">+${students.length - 5}</div>`;
+            }
+            avatarsHtml += '</div>';
 
-                modalContent.innerHTML = `
+            modalContent.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 h-[600px]">
                         <!-- LEFT COLUMN: Summary -->
                         <div class="bg-[#2563eb] text-white p-8 flex flex-col justify-between relative overflow-hidden">
@@ -1028,59 +1091,59 @@
                             </div>
                     </div>
                 `;
+        }
+
+        // Student Status Toggle Logic
+        window.toggleStudentStatus = function (btn, status) {
+            const container = btn.parentElement;
+            const buttons = container.querySelectorAll('button');
+
+            // Reset all
+            buttons.forEach(b => {
+                b.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold text-slate-400 hover:bg-white hover:shadow-sm transition-all";
+            });
+
+            // Set Active
+            if (status === 'present') {
+                btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-green-600 shadow-sm border border-green-100";
+                container.setAttribute('data-status', 'present');
+            } else if (status === 'absent') {
+                btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-red-500 shadow-sm border border-red-100";
+                container.setAttribute('data-status', 'absent');
+            }
+        }
+
+        window.saveAttendance = async function (btn) {
+            const originalContent = btn.innerHTML;
+            const rows = document.querySelectorAll('.student-attendance-row');
+            const absentPageIds = [];
+
+            rows.forEach(row => {
+                if (row.getAttribute('data-status') === 'absent') {
+                    absentPageIds.push(row.getAttribute('data-page-id'));
+                }
+            });
+
+            const lessonPageId = currentLesson.pageId;
+
+            // UUID Validation Regex
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+            if (!lessonPageId || !uuidRegex.test(lessonPageId)) {
+                alert(`❌ Sync Error: Invalid lesson Page ID (${lessonPageId}).\n\nPlease run "node scripts/update-data.js" with your API key to sync real Notion data before marking attendance.`);
+                return;
             }
 
-            // Student Status Toggle Logic
-            window.toggleStudentStatus = function (btn, status) {
-                const container = btn.parentElement;
-                const buttons = container.querySelectorAll('button');
-
-                // Reset all
-                buttons.forEach(b => {
-                    b.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold text-slate-400 hover:bg-white hover:shadow-sm transition-all";
-                });
-
-                // Set Active
-                if (status === 'present') {
-                    btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-green-600 shadow-sm border border-green-100";
-                    container.setAttribute('data-status', 'present');
-                } else if (status === 'absent') {
-                    btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-red-500 shadow-sm border border-red-100";
-                    container.setAttribute('data-status', 'absent');
-                }
+            // Verify student IDs are also real UUIDs
+            const invalidStudentIds = absentPageIds.filter(id => !uuidRegex.test(id));
+            if (invalidStudentIds.length > 0) {
+                alert(`❌ Sync Error: One or more students have invalid IDs (${invalidStudentIds[0]}...).\n\nPlease run the sync script to update your local student database.`);
+                return;
             }
 
-            window.saveAttendance = async function (btn) {
-                const originalContent = btn.innerHTML;
-                const rows = document.querySelectorAll('.student-attendance-row');
-                const absentPageIds = [];
-
-                rows.forEach(row => {
-                    if (row.getAttribute('data-status') === 'absent') {
-                        absentPageIds.push(row.getAttribute('data-page-id'));
-                    }
-                });
-
-                const lessonPageId = currentLesson.pageId;
-
-                // UUID Validation Regex
-                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-                if (!lessonPageId || !uuidRegex.test(lessonPageId)) {
-                    alert(`❌ Sync Error: Invalid lesson Page ID (${lessonPageId}).\n\nPlease run "node scripts/update-data.js" with your API key to sync real Notion data before marking attendance.`);
-                    return;
-                }
-
-                // Verify student IDs are also real UUIDs
-                const invalidStudentIds = absentPageIds.filter(id => !uuidRegex.test(id));
-                if (invalidStudentIds.length > 0) {
-                    alert(`❌ Sync Error: One or more students have invalid IDs (${invalidStudentIds[0]}...).\n\nPlease run the sync script to update your local student database.`);
-                    return;
-                }
-
-                try {
-                    btn.disabled = true;
-                    btn.innerHTML = `
+            try {
+                btn.disabled = true;
+                btn.innerHTML = `
                         <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -1088,47 +1151,41 @@
                         SAVING...
                     `;
 
-                    const response = await fetch('/.netlify/functions/mark-attendance', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            lessonPageId: lessonPageId,
-                            absentPageIds: absentPageIds
-                        })
-                    });
+                const response = await fetch('/.netlify/functions/mark-attendance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lessonPageId: lessonPageId,
+                        absentPageIds: absentPageIds
+                    })
+                });
 
-                    const result = await response.json();
+                const result = await response.json();
 
-                    if (!response.ok) throw new Error(result.error || 'Failed to sync with Notion');
+                if (!response.ok) throw new Error(result.error || 'Failed to sync with Notion');
 
-                    alert('✅ Success! Attendance has been synced with Notion.');
-                    closeModal();
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('❌ Connection Error: ' + error.message);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
-                }
+                alert('✅ Success! Attendance has been synced with Notion.');
+                closeModal();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Connection Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
             }
+        }
 
-            window.closeModal = function () {
-                modal.classList.add('hidden');
-                // Optional: reset to default size after transition
-                setTimeout(() => {
-                    modalPanel.classList.remove('sm:max-w-5xl');
-                    modalPanel.classList.add('sm:max-w-md');
-                }, 200);
-            }
+        window.closeModal = function () {
+            modal.classList.add('hidden');
+            // Optional: reset to default size after transition
+            setTimeout(() => {
+                modalPanel.classList.remove('sm:max-w-5xl');
+                modalPanel.classList.add('sm:max-w-md');
+            }, 200);
+        }
 
-            modalBackdrop.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', closeModal);
 
-            // Initial render
-            updateUI();
-
-            // Refresh time line every minute
-            setInterval(updateTimeLine, 60000);
-        });
     </script>
 </body>
 

@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
     <script src="assets/js/lessons.js"></script>
+    <script src="assets/js/auth.js"></script>
     <style>
         .tab-btn {
             position: relative;
@@ -146,12 +147,21 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                    <img id="user-avatar" src="https://i.pravatar.cc/150?img=11" alt="Profile"
                         class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
+                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor
+                        </div>
                     </div>
+                    <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors"
+                        title="Logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </aside>
@@ -285,6 +295,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            const user = Auth.checkAuth('teacher');
+            if (!user) return;
+
+            // Update Profile UI
+            const nameEl = document.getElementById('user-name');
+            const avatarEl = document.getElementById('user-avatar');
+            const roleEl = document.getElementById('user-role');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            if (nameEl) nameEl.textContent = user.name;
+            if (avatarEl && user.avatar) avatarEl.src = user.avatar;
+            if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Auth.logout();
+                });
+            }
+
             const container = document.getElementById('classes-container');
             const modal = document.getElementById('group-modal');
             const modalBackdrop = document.getElementById('modal-backdrop');
@@ -306,7 +337,8 @@
             // Function to get next lesson for a group
             function getNextLesson(groupId, groupName) {
                 const now = new Date();
-                const upcoming = NOTION_LESSONS
+                const filteredLessons = Auth.filterData(NOTION_LESSONS);
+                const upcoming = filteredLessons
                     .filter(l => (l.groupId === groupId || l.title.includes(groupName)) && new Date(l.isoDate) > now)
                     .sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
 
@@ -325,7 +357,14 @@
                     return;
                 }
 
-                container.innerHTML = NOTION_GROUPS.map(group => {
+                const filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
+
+                if (filteredGroups.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">No classes assigned to you.</div>';
+                    return;
+                }
+
+                container.innerHTML = filteredGroups.map(group => {
                     const nextLessonText = getNextLesson(group.id, group.name);
                     const avatarsHtml = (group.students || []).slice(0, 3).map(s =>
                         `<img src="${s.avatar}" alt="${s.name}" class="ring-2 ring-white w-8 h-8 rounded-full object-cover">`
@@ -429,7 +468,8 @@
 
 
             function renderHistoryTab() {
-                const history = NOTION_LESSONS.filter(l => l.groupId === currentGroup.id)
+                const filteredLessons = Auth.filterData(NOTION_LESSONS);
+                const history = filteredLessons.filter(l => l.groupId === currentGroup.id)
                     .sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
 
                 if (history.length === 0) {

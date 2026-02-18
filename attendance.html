@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Record - Oruj's English</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/data-loader.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        Auth.checkAuth('student');
+    </script>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,11 +30,13 @@
                 <!-- Profile Card inside Sidebar -->
                 <div class="sidebar-profile-card">
                     <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg border-2 border-white/20">
-                        <img src="https://i.pravatar.cc/100?u=alex" alt="Alex">
+                        <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=Student&background=random"
+                            alt="Profile">
                     </div>
                     <div>
-                        <div class="text-xs font-black text-white">Alex Johnson</div>
-                        <div class="text-[9px] font-bold text-white/50 uppercase tracking-widest">Advanced Level</div>
+                        <div id="sidebar-name" class="text-xs font-black text-white">Loading...</div>
+                        <div id="sidebar-role" class="text-[9px] font-bold text-white/50 uppercase tracking-widest">
+                            Student</div>
                     </div>
                 </div>
             </div>
@@ -66,16 +73,31 @@
                 </a>
             </nav>
 
-            <div class="sidebar-footer border-t border-slate-100">
-                <a href="login.html" class="sidebar-link opacity-60">
+            <div class="sidebar-footer border-t border-slate-100 pb-10">
+                <button id="logout-btn" class="sidebar-link opacity-60 w-full text-left">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     <span>Logout</span>
-                </a>
+                </button>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const user = Auth.getCurrentUser();
+                    if (user) {
+                        document.getElementById('sidebar-name').textContent = user.name;
+                        document.getElementById('sidebar-avatar').src = user.avatar;
+                    }
+
+                    document.getElementById('logout-btn').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        Auth.logout();
+                    });
+                });
+            </script>
         </aside>
 
         <!-- Main View -->
@@ -110,19 +132,20 @@
             </header>
 
             <!-- Stats Grid Match Image 2 -->
-            <div class="grid lg:grid-cols-3 gap-6 mb-10">
+            <div id="stats-grid" class="grid lg:grid-cols-3 gap-6 mb-10">
+                <!-- Dynamic Stats will be injected here -->
                 <div class="dash-card flex items-center justify-between group cursor-default">
                     <div>
                         <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Attendance
                             Rate</div>
-                        <div class="text-4xl font-black text-slate-800">92%</div>
+                        <div id="attendance-rate" class="text-4xl font-black text-slate-800">0%</div>
                         <div class="text-[10px] font-bold text-emerald-500 mt-2 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                     d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg>
-                            +4% vs last month
+                            Up to date
                         </div>
                     </div>
                     <div
@@ -139,18 +162,19 @@
                 <div
                     class="dash-card bg-blue-600 !text-white flex items-center justify-between group cursor-default shadow-xl shadow-blue-100">
                     <div class="relative z-10">
-                        <div class="text-[10px] font-black text-blue-100 uppercase tracking-widest mb-2">Lessons this
-                            month</div>
-                        <div class="text-4xl font-black">11<span class="text-blue-200 text-xl font-medium">/12</span>
+                        <div class="text-[10px] font-black text-blue-100 uppercase tracking-widest mb-2">Lessons
+                            Completed</div>
+                        <div id="lessons-completed" class="text-4xl font-black">0<span
+                                class="text-blue-200 text-xl font-medium">/0</span></div>
+                        <div id="lessons-remaining" class="text-[10px] font-bold text-blue-100 mt-2">No upcoming lessons
                         </div>
-                        <div class="text-[10px] font-bold text-blue-100 mt-2">1 lesson remaining</div>
                     </div>
                     <div
                         class="w-12 h-12 bg-white/20 text-white rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
                         </svg>
                     </div>
                 </div>
@@ -158,8 +182,8 @@
                     <div>
                         <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Missed Lessons
                         </div>
-                        <div class="text-4xl font-black text-slate-800">1</div>
-                        <div class="text-[10px] font-bold text-slate-400 mt-2">You can request a makeup class.</div>
+                        <div id="missed-lessons" class="text-4xl font-black text-slate-800">0</div>
+                        <div class="text-[10px] font-bold text-slate-400 mt-2">Based on your schedule</div>
                     </div>
                     <div
                         class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -174,171 +198,192 @@
 
             <!-- Calendar Record -->
             <section class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-10">
-                <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-xl font-black text-slate-800 tracking-tight">October 2023</h2>
-                        <div class="flex gap-1">
-                            <button
-                                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <button
-                                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
+                <div id="calendar-body">
+                    <div id="calendar-header"
+                        class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <h2 id="current-month" class="text-xl font-black text-slate-800 tracking-tight">Loading...
+                            </h2>
+                            <div class="flex gap-1">
+                                <button onclick="changeMonth(-1)"
+                                    class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button onclick="changeMonth(1)"
+                                    class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                            <span class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full bg-emerald-500"></span> Attended</span>
+                            <span class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full bg-rose-500"></span> Missed</span>
+                            <span class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full bg-blue-500"></span> Upcoming</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                        <span class="flex items-center gap-1.5"><span
-                                class="w-2 h-2 rounded-full bg-emerald-500"></span> Attended</span>
-                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                            Missed</span>
-                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            Upcoming</span>
+
+                    <div id="calendar-grid" class="calendar-grid">
+                        <!-- Headers -->
+                        <div class="calendar-day-header">MON</div>
+                        <div class="calendar-day-header">TUE</div>
+                        <div class="calendar-day-header">WED</div>
+                        <div class="calendar-day-header">THU</div>
+                        <div class="calendar-day-header">FRI</div>
+                        <div class="calendar-day-header text-rose-500">SAT</div>
+                        <div class="calendar-day-header text-rose-500">SUN</div>
+
+                        <!-- Dynamic Grid will be injected here -->
                     </div>
                 </div>
-
-                <div class="calendar-grid">
-                    <!-- Headers -->
-                    <div class="calendar-day-header">MON</div>
-                    <div class="calendar-day-header">TUE</div>
-                    <div class="calendar-day-header">WED</div>
-                    <div class="calendar-day-header">THU</div>
-                    <div class="calendar-day-header">FRI</div>
-                    <div class="calendar-day-header text-rose-500">SAT</div>
-                    <div class="calendar-day-header text-rose-500">SUN</div>
-
-                    <!-- Row 1 -->
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">25</div>
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">26</div>
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">27</div>
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">28</div>
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">29</div>
-                    <div class="calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs">30</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs">1</div>
-
-                    <!-- Row 2 -->
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        2
-                        <span class="calendar-pill pill-green">Grammar 101 <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">3</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        4
-                        <span class="calendar-pill pill-green">Speaking Lab <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">5</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">6</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">7</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">8</div>
-
-                    <!-- Row 3 -->
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        9
-                        <span class="calendar-pill pill-green">Vocab Drill <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">10</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        11
-                        <span class="calendar-pill pill-red">Reading Comp <br> Missed</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">12</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">13</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">14</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">15</div>
-
-                    <!-- Row 4 -->
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        16
-                        <span class="calendar-pill pill-green">Listening <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">17</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        18
-                        <span class="calendar-pill pill-green">Review <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">19</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">20</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">21</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">22</div>
-
-                    <!-- Row 5 (Active Day) -->
-                    <div class="calendar-cell font-black text-slate-800 text-xs">
-                        23
-                        <span class="calendar-pill pill-green">Essay Writing <br> 14:00 - 15:30</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">24</div>
-                    <div
-                        class="calendar-cell font-black text-slate-800 text-xs ring-2 ring-blue-500 ring-inset rounded-lg z-10 scale-[1.02] bg-blue-50/30">
-                        25
-                        <span class="calendar-pill pill-blue">Final Exam <br> 14:00 - 16:00</span>
-                    </div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">26</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">27</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">28</div>
-                    <div class="calendar-cell font-black text-slate-800 text-xs text-slate-300">29</div>
-                </div>
+            </section>
             </section>
 
             <!-- Recent Feedback Section -->
             <section class="space-y-6">
                 <h3 class="text-xl font-black text-slate-800 tracking-tight">Recent Feedback</h3>
-                <div class="grid gap-4">
-                    <div
-                        class="dash-card flex gap-6 animate-fade-in group hover:border-blue-200 transition-all border border-transparent">
-                        <div
-                            class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-black text-slate-800">Mrs. Sarah Smith</span>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">on Essay
-                                    Writing (Oct 23)</span>
-                            </div>
-                            <p class="text-sm text-slate-500 italic opacity-80">"Alex showed great improvement in
-                                structure. Vocabulary usage was diverse, but watch out for run-on sentences in the
-                                conclusion."</p>
-                        </div>
-                    </div>
-                    <div class="dash-card flex gap-6 animate-fade-in group hover:border-rose-200 transition-all border border-transparent"
-                        style="animation-delay: 0.1s;">
-                        <div
-                            class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-black text-slate-800">System Notification</span>
-                                <span
-                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-slate-300">Oct
-                                    11</span>
-                            </div>
-                            <p class="text-sm text-slate-500 opacity-80">"You missed 'Reading Comp'. Please schedule a
-                                makeup session before the end of the month."</p>
-                            <a href="#"
-                                class="inline-block mt-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Schedule
-                                Makeup</a>
-                        </div>
-                    </div>
+                <div id="feedback-list" class="grid gap-4">
+                    <!-- Dynamic Feedback will be injected here -->
+                    <div class="text-slate-400 text-sm italic">No recent feedback yet.</div>
                 </div>
             </section>
+
+            <script>
+                let currentViewDate = new Date();
+
+                async function init() {
+                    await DataLoader.waitForData();
+                    const user = Auth.getCurrentUser();
+                    if (!user) return;
+
+                    // 1. Stats
+                    const studentData = NOTION_STUDENTS.find(s => s.id === user.id);
+                    if (studentData) {
+                        document.getElementById('attendance-rate').textContent = Math.round(studentData.attendanceRate) + '%';
+                        document.getElementById('lessons-completed').innerHTML = `${studentData.attendedLessons}<span class="text-blue-200 text-xl font-medium">/${studentData.totalLessons}</span>`;
+
+                        const missed = studentData.totalLessons - studentData.attendedLessons;
+                        document.getElementById('missed-lessons').textContent = Math.max(0, missed);
+                    }
+
+                    // 2. Feedback
+                    renderFeedback();
+
+                    // 3. Calendar
+                    renderCalendar();
+                }
+
+                document.addEventListener('DOMContentLoaded', init);
+
+                function renderFeedback() {
+                    const list = document.getElementById('feedback-list');
+                    const filteredFeedback = Auth.filterData(NOTION_FEEDBACKS, 'feedback');
+
+                    if (filteredFeedback.length > 0) {
+                        list.innerHTML = filteredFeedback.sort((a, b) => new Date(b.date) - new Date(a.date)).map(fb => `
+                            <div class="dash-card flex gap-6 animate-fade-in group hover:border-blue-200 transition-all border border-transparent">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-black text-slate-800">${fb.teacherName}</span>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            ${fb.date ? new Date(fb.date).toLocaleDateString() : ''}
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-slate-500 italic opacity-80">"${fb.text || 'No comments provided.'}"</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                function changeMonth(delta) {
+                    currentViewDate.setMonth(currentViewDate.getMonth() + delta);
+                    renderCalendar();
+                }
+
+                function renderCalendar() {
+                    const grid = document.getElementById('calendar-grid');
+                    const monthDisplay = document.getElementById('current-month');
+                    const user = Auth.getCurrentUser();
+
+                    // Clear previous cells (keep headers)
+                    const cells = grid.querySelectorAll('.calendar-cell');
+                    cells.forEach(c => c.remove());
+
+                    const year = currentViewDate.getFullYear();
+                    const month = currentViewDate.getMonth();
+
+                    monthDisplay.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(currentViewDate);
+
+                    const firstDay = new Date(year, month, 1).getDay(); // 0 is Sun
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                    // Adjust firstDay to start from Monday (1)
+                    const startPadding = (firstDay === 0 ? 6 : firstDay - 1);
+
+                    // Add padding from prev month
+                    const prevMonthLastDay = new Date(year, month, 0).getDate();
+                    for (let i = startPadding - 1; i >= 0; i--) {
+                        const cell = document.createElement('div');
+                        cell.className = 'calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs';
+                        cell.textContent = prevMonthLastDay - i;
+                        grid.appendChild(cell);
+                    }
+
+                    // Student specific lessons
+                    const myLessons = Auth.filterData(NOTION_LESSONS);
+
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'calendar-cell font-black text-slate-800 text-xs';
+                        cell.textContent = day;
+
+                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const dayLessons = myLessons.filter(l => l.isoDate.startsWith(dateStr));
+
+                        dayLessons.forEach(l => {
+                            const pill = document.createElement('span');
+                            let pillClass = 'pill-blue'; // upcoming
+                            let statusText = l.time || '';
+
+                            if (l.status === 'Completed') {
+                                pillClass = 'pill-green';
+                            } else if (l.status === 'Missed' || l.status === 'Cancelled') {
+                                pillClass = 'pill-red';
+                                statusText = l.status;
+                            }
+
+                            pill.className = `calendar-pill ${pillClass}`;
+                            pill.innerHTML = `${l.title} <br> ${statusText}`;
+                            cell.appendChild(pill);
+                        });
+
+                        // Highlight current day
+                        const today = new Date();
+                        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                            cell.className += ' ring-2 ring-blue-500 ring-inset rounded-lg z-10 scale-[1.02] bg-blue-50/30';
+                        }
+
+                        grid.appendChild(cell);
+                    }
+                }
+            </script>
         </main>
     </div>
 

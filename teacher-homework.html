@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
     <script src="assets/js/lessons.js"></script>
+    <script src="assets/js/auth.js"></script>
     <style>
         .homework-status {
             padding: 4px 12px;
@@ -84,19 +85,21 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile"
+                    <img id="user-avatar" src="https://i.pravatar.cc/150?img=11" alt="Profile"
                         class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <div class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor</div>
+                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
+                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor
+                        </div>
                     </div>
-                    <a href="teacher-login.html" class="ml-auto text-slate-400 hover:text-red-500">
+                    <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors"
+                        title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
         </aside>
@@ -259,14 +262,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            const user = Auth.checkAuth('teacher');
+            if (!user) return;
+
+            // Update Profile UI
+            const nameEl = document.getElementById('user-name');
+            const avatarEl = document.getElementById('user-avatar');
+            const roleEl = document.getElementById('user-role');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            if (nameEl) nameEl.textContent = user.name;
+            if (avatarEl && user.avatar) avatarEl.src = user.avatar;
+            if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Auth.logout();
+                });
+            }
+
             const classSelect = document.getElementById('class-select');
             const lessonSelect = document.getElementById('lesson-select');
             const form = document.getElementById('assign-task-form');
             const submissionsList = document.getElementById('submissions-list');
 
             function initForm() {
-                if (typeof NOTION_GROUPS !== 'undefined') {
-                    const options = NOTION_GROUPS.map(group =>
+                const filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
+                if (filteredGroups.length > 0) {
+                    const options = filteredGroups.map(group =>
                         `<option value="${group.id}">${group.id} - ${group.name}</option>`
                     ).join('');
                     classSelect.innerHTML += options;
@@ -275,8 +300,9 @@
             }
 
             function renderSubmissions() {
-                if (typeof NOTION_SUBMISSIONS !== 'undefined' && NOTION_SUBMISSIONS.length > 0) {
-                    submissionsList.innerHTML = NOTION_SUBMISSIONS.map(sub => `
+                const filteredSubmissions = Auth.filterData(NOTION_SUBMISSIONS, 'submissions');
+                if (typeof filteredSubmissions !== 'undefined' && filteredSubmissions.length > 0) {
+                    submissionsList.innerHTML = filteredSubmissions.map(sub => `
                         <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-3">
@@ -337,7 +363,7 @@
                 lessonSelect.innerHTML = '<option value="">Select a lesson...</option>';
 
                 if (selectedGroupId && typeof NOTION_LESSONS !== 'undefined') {
-                    const filteredLessons = NOTION_LESSONS.filter(l => l.groupId === selectedGroupId);
+                    const filteredLessons = Auth.filterData(NOTION_LESSONS).filter(l => l.groupId === selectedGroupId);
 
                     filteredLessons.forEach(lesson => {
                         const date = new Date(lesson.isoDate).toLocaleDateString();

@@ -5,7 +5,6 @@
     "node-fetch": "^2.7.0"
   },
   "scripts": {
-    "sync": "node scripts/update-data.js",
-    "build": "npm run sync"
+    "build": "echo 'Build complete (using dynamic data loader)'"
   }
 }
