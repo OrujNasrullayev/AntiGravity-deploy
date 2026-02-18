@@ -13,35 +13,7 @@ function formatId(id) {
     return id;
 }
 
-/**
- * Fetch all pages from a Notion database with pagination
- */
-async function fetchAllPages(notion, databaseId) {
-    if (!notion || !notion.databases || !databaseId) {
-        console.warn(`⚠️ Skipping fetch for DB ID: ${databaseId} (Notion client or databases API not available)`);
-        return [];
-    }
 
-    const cleanId = formatId(databaseId);
-    if (!cleanId) {
-        console.warn(`⚠️ Skipping fetch: invalid or empty formatted databaseId`);
-        return [];
-    }
-    let pages = [];
-    let cursor = undefined;
-
-    while (true) {
-        const response = await notion.databases.query({
-            database_id: cleanId,
-            start_cursor: cursor
-        });
-
-        pages.push(...response.results);
-        if (!response.has_more) break;
-        cursor = response.next_cursor;
-    }
-    return pages;
-}
 
 exports.handler = async (event, context) => {
     // This looks at every possible place the Client could be hiding
@@ -50,6 +22,14 @@ exports.handler = async (event, context) => {
 
     // DEBUG LOG: Let's see what 'notion' actually looks like in the logs
     console.log("Notion object keys:", Object.keys(notion));
+
+    // Inline database fetcher
+    const queryDb = async (id) => {
+        const cleanId = formatId(id);
+        if (!cleanId) return [];
+        const response = await notion.databases.query({ database_id: cleanId });
+        return response.results;
+    };
 
     // Database IDs from environment variables
     const DB_IDS = {
@@ -75,13 +55,13 @@ exports.handler = async (event, context) => {
             assignmentPages,
             feedbackPages
         ] = await Promise.all([
-            fetchAllPages(notion, DB_IDS.STUDENTS),
-            fetchAllPages(notion, DB_IDS.LESSONS),
-            fetchAllPages(notion, DB_IDS.TEACHERS),
-            fetchAllPages(notion, DB_IDS.GROUPS),
-            fetchAllPages(notion, DB_IDS.SUBMISSIONS),
-            fetchAllPages(notion, DB_IDS.ASSIGNMENTS),
-            fetchAllPages(notion, DB_IDS.FEEDBACKS)
+            queryDb(DB_IDS.STUDENTS),
+            queryDb(DB_IDS.LESSONS),
+            queryDb(DB_IDS.TEACHERS),
+            queryDb(DB_IDS.GROUPS),
+            queryDb(DB_IDS.SUBMISSIONS),
+            queryDb(DB_IDS.ASSIGNMENTS),
+            queryDb(DB_IDS.FEEDBACKS)
         ]);
 
         // 2. Process Students
