@@ -22,6 +22,7 @@ exports.handler = async (event, context) => {
     console.log("Checking databases tool:", typeof notion.databases);
     console.log("Checking query tool:", notion.databases ? typeof notion.databases.query : 'no databases');
     console.log('Available database methods:', Object.keys(notion.databases));
+    console.log('Build Cache Bust:', 'v2.2.1-refetch-12345');
 
     // Inline database fetcher
     const queryDb = async (id) => {
