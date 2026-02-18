@@ -21,6 +21,7 @@ exports.handler = async (event, context) => {
     // 3. ADD THIS SPECIFIC DEBUG LOG
     console.log("Checking databases tool:", typeof notion.databases);
     console.log("Checking query tool:", notion.databases ? typeof notion.databases.query : 'no databases');
+    console.log('Available database methods:', Object.keys(notion.databases));
 
     // Inline database fetcher
     const queryDb = async (id) => {
