@@ -1,5 +1,4 @@
-const NotionPackage = require('@notionhq/client');
-const Client = NotionPackage.Client || NotionPackage.default?.Client;
+const Notion = require('@notionhq/client');
 
 // Database IDs from environment variables
 const DB_IDS = {
@@ -51,19 +50,10 @@ async function fetchAllPages(notion, databaseId) {
 }
 
 exports.handler = async (event, context) => {
-    // Initialize Notion Client inside the handler
-    if (!Client) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "Notion Client not found. Check if @notionhq/client is installed." })
-        };
-    }
+    // Initialize Notion Client
+    // Robust check for Client constructor location
+    const Client = Notion.Client || Notion;
     const notion = new Client({ auth: process.env.NOTION_API_KEY });
-
-    // Basic security check: Optional, depends on user requirements
-    // if (event.httpMethod !== "GET") {
-    //     return { statusCode: 405, body: "Method Not Allowed" };
-    // }
 
     try {
         console.log('📡 Fetching data from Notion...');
