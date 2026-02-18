@@ -63,11 +63,11 @@ exports.handler = async (event, context) => {
         await notion.pages.update({
             page_id: lessonPageId,
             properties: {
-                'Absent students': {
+                'Absent Students': {
                     relation: absentIds.map(id => ({ id }))
                 },
                 'Status': {
-                    select: { name: 'Completed' }
+                    status: { name: 'Completed' }
                 }
             }
         });
