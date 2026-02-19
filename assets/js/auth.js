@@ -136,13 +136,16 @@ const Auth = {
 // Auto-init profile if on a dashboard
 document.addEventListener('DOMContentLoaded', () => {
     const user = Auth.getCurrentUser();
-    if (user && user.role === 'teacher') {
-        const profileName = document.querySelector('.text-sm.font-bold.text-[#0f172a]');
-        const profileImg = document.querySelector('img[alt="Profile"]');
-        const profileSub = document.querySelector('.text-[10px].font-bold.text-slate-400.uppercase');
+    if (user) {
+        // Use standard IDs which are present in both teacher and student templates
+        const profileName = document.getElementById('sidebar-name');
+        const profileImg = document.getElementById('sidebar-avatar');
+        const profileSub = document.getElementById('sidebar-role');
 
         if (profileName) profileName.textContent = user.name;
         if (profileImg) profileImg.src = user.avatar;
-        if (profileSub) profileSub.textContent = 'Instructor';
+        if (profileSub) {
+            profileSub.textContent = user.role === 'teacher' ? 'Instructor' : 'Student';
+        }
     }
 });
