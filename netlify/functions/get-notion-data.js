@@ -78,17 +78,23 @@ exports.handler = async (event, context) => {
             const studentObj = {
                 id: page.id,
                 pageId: page.id,
-                studentId: page.properties['Student ID']?.formula?.string || 'S000',
+                studentId: (page.properties['Student ID']?.formula?.string ||
+                    page.properties['Student ID']?.rich_text?.[0]?.plain_text ||
+                    'S000').trim(),
                 name: name,
                 email: page.properties.Email?.email || null,
-                password: page.properties.Password?.rich_text?.[0]?.plain_text || null,
+                password: (page.properties.Password?.rich_text?.[0]?.plain_text || '').trim(),
                 attendanceRate: attendanceValue * 100,
                 attendedLessons: attendedCount,
                 totalLessons: totalCount,
                 avatar: avatar,
                 feedback: []
             };
+
+            // Key by both dashed and non-dashed ID for safety
             studentsMap[page.id] = studentObj;
+            studentsMap[page.id.replace(/-/g, '')] = studentObj;
+
             return studentObj;
         });
 
@@ -98,14 +104,20 @@ exports.handler = async (event, context) => {
             const name = page.properties.Name.title[0]?.plain_text || 'Unknown';
             const avatar = page.properties['Profile Picture']?.files[0]?.file?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
             const teacherObj = {
-                id: page.properties['Teacher ID']?.formula?.string || 'T000',
+                id: (page.properties['Teacher ID']?.formula?.string ||
+                    page.properties['Teacher ID']?.rich_text?.[0]?.plain_text ||
+                    'T000').trim(),
                 pageId: page.id,
                 name: name,
                 email: page.properties.Email?.email || null,
-                password: page.properties.Password?.rich_text?.[0]?.plain_text || null,
+                password: (page.properties.Password?.rich_text?.[0]?.plain_text || '').trim(),
                 avatar: avatar
             };
+
+            // Key by both dashed and non-dashed ID for safety
             teachersMap[page.id] = teacherObj;
+            teachersMap[page.id.replace(/-/g, '')] = teacherObj;
+
             return teacherObj;
         });
 
@@ -125,15 +137,19 @@ exports.handler = async (event, context) => {
             }
 
             groupIdsMap[page.id] = humanId;
+            groupIdsMap[page.id.replace(/-/g, '')] = humanId;
+
             const studentRelation = page.properties.Students?.relation || [];
             const teacherRelation = page.properties.Teacher?.relation || page.properties.Teachers?.relation || [];
 
-            // 1. Insert the robust logic here
+            // Robust teacher/student lookup
             const linkedTeacherPageId = teacherRelation[0]?.id;
             const teacherFromMap = teachersMap[linkedTeacherPageId];
             const finalTeacherId = teacherFromMap ? teacherFromMap.id : "T001";
 
-            console.log(`Group: ${name} | Teacher Link ID: ${teacherRelation[0]?.id} | Found in Map: ${!!teachersMap[teacherRelation[0]?.id]}`);
+            const linkedStudents = studentRelation
+                .map(rel => studentsMap[rel.id])
+                .filter(Boolean);
 
             return {
                 id: humanId,
@@ -141,8 +157,8 @@ exports.handler = async (event, context) => {
                 name: name,
                 type: type,
                 color: type === 'conversation' ? "#ea580c" : "#db2777",
-                students: studentRelation.map(rel => studentsMap[rel.id]).filter(Boolean),
-                teacherId: teachersMap[teacherRelation[0]?.id]?.id || "T001"
+                students: linkedStudents,
+                teacherId: finalTeacherId
             };
         });
 
@@ -169,7 +185,7 @@ exports.handler = async (event, context) => {
                 isoDate: startDate,
                 duration: type === 'conversation' ? 60 : 90,
                 students: studentRelation.map(rel => studentsMap[rel.id]).filter(Boolean),
-                groupId: groupRelation[0] ? groupIdsMap[groupRelation[0].id] : null,
+                groupId: groupRelation[0] ? groupIdsMap[groupRelation[0].id] || groupIdsMap[groupRelation[0].id.replace(/-/g, '')] : null,
                 homeworkIds: homeworkRelation.map(r => r.id)
             };
         }).filter(l => l.isoDate).sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
@@ -205,12 +221,13 @@ exports.handler = async (event, context) => {
 
         const submissionsArray = submissionPages.map(page => {
             const studentId = page.properties.Student?.relation[0]?.id;
+            const student = studentId ? studentsMap[studentId] || studentsMap[studentId.replace(/-/g, '')] : null;
             return {
                 id: page.id,
                 name: page.properties.Name.title[0]?.plain_text || 'Untitled Submission',
                 status: page.properties.Status?.status?.name || 'Not checked',
                 studentId: studentId,
-                studentName: studentsMap[studentId]?.name || 'Unknown Student',
+                studentName: student?.name || 'Unknown Student',
                 assignmentId: page.properties.Assignments?.relation[0]?.id,
                 uploads: page.properties.Uploads?.files || []
             };
