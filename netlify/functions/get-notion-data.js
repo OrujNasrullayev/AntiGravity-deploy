@@ -128,6 +128,13 @@ exports.handler = async (event, context) => {
             const studentRelation = page.properties.Students?.relation || [];
             const teacherRelation = page.properties.Teacher?.relation || page.properties.Teachers?.relation || [];
 
+            // 1. Insert the robust logic here
+            const linkedTeacherPageId = teacherRelation[0]?.id;
+            const teacherFromMap = teachersMap[linkedTeacherPageId];
+            const finalTeacherId = teacherFromMap ? teacherFromMap.id : "T001";
+
+            console.log(`Group: ${name} | Teacher Link ID: ${teacherRelation[0]?.id} | Found in Map: ${!!teachersMap[teacherRelation[0]?.id]}`);
+
             return {
                 id: humanId,
                 pageId: page.id,

@@ -1,38 +1,29 @@
 require('dotenv').config();
-const { Client } = require('@notionhq/client');
+const Notion = require('@notionhq/client');
+console.log('Notion module structure:', Object.keys(Notion));
+if (Notion.default) console.log('Notion.default structure:', Object.keys(Notion.default));
 
+const Client = Notion.Client || (Notion.default ? Notion.default.Client : Notion);
+console.log('Client is:', typeof Client);
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
-const DB_ID = '2ff6f602c1e1804d8b57d96741933b67';
+console.log('notion instance structure:', Object.keys(notion));
+const DB_ID = process.env.GROUPS_DATABASE_ID;
 
 async function deepDive() {
     console.log(`🤿 Deep diving into Database: ${DB_ID}`);
+    console.log('Notion keys:', Object.keys(notion));
+    if (notion.databases) console.log('Notion.databases keys:', Object.keys(notion.databases));
 
     try {
-        // 1. Retrieve Database Metadata
-        console.log('1️⃣  Retrieving Database Metadata...');
-        const db = await notion.databases.retrieve({ database_id: DB_ID });
-        console.log('   ✅ Type:', db.object);
-        console.log('   ✅ Title:', db.title[0]?.plain_text);
-        console.log('   ✅ Parent:', JSON.stringify(db.parent));
+        const response = await notion.databases.query({
+            database_id: DB_ID,
+            page_size: 1
+        });
 
-        if (db.parent.type === 'page_id') {
-            console.log('   ⚠️  This database lives inside a Page.');
-        }
-
-        // 2. Try Query with strict page filter
-        console.log('\n2️⃣  Attempting filtered Query (filter: {object: "page"})...');
-        try {
-            const response = await notion.databases.query({
-                database_id: DB_ID,
-                filter: {
-                    property: 'object',
-                    value: 'page' // Try this unlikely filter just in case
-                },
-                page_size: 1
-            });
-            console.log(`   ✅ Query Success! Found ${response.results.length} pages.`);
-        } catch (e) {
-            console.log('   ❌ Filtered Query Failed:', e.message);
+        if (response.results.length > 0) {
+            const fs = require('fs');
+            fs.writeFileSync('group_props_debug.json', JSON.stringify(response.results[0].properties, null, 2));
+            console.log('✅ Wrote properties to group_props_debug.json');
         }
 
         // 3. Try to find the SOURCE if this is a view
