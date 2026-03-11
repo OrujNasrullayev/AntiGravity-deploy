@@ -15,6 +15,18 @@ body {
     color: var(--teacher-text-dark);
 }
 
+/* Global Fix for stretched profile images */
+img.rounded-full,
+.avatar-stack img,
+.student-item img,
+#user-avatar,
+#sidebar-avatar,
+#active-avatar {
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+}
+
 .teacher-layout {
     display: flex;
     min-height: 100vh;
@@ -87,6 +99,9 @@ body {
     border-radius: 20px;
     padding: 24px;
     transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .class-card:hover {
@@ -101,12 +116,18 @@ body {
 }
 
 .avatar-stack img {
-    width: 32px;
-    height: 32px;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    aspect-ratio: 1 / 1 !important;
     border-radius: 50%;
     border: 2px solid white;
     margin-right: -8px;
-    object-filter: cover;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .avatar-more {

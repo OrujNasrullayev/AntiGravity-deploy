@@ -98,10 +98,16 @@
 
         .event-card {
             border-radius: 12px;
-            padding: 6px;
-            font-size: 12px;
-            margin: 4px;
-            height: calc(100% - 8px);
+            padding: 8px;
+            font-size: 11px;
+            margin: 2px 4px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
         }
 
         /* View-specific scroll adjustments */
@@ -194,11 +200,12 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile"
-                        class="w-10 h-10 rounded-full object-cover">
+                    <img id="sidebar-avatar"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""
+                        class="w-10 h-10 rounded-full object-cover bg-slate-100">
                     <div>
                         <div id="sidebar-name" class="text-sm font-bold text-[#0f172a]">Loading...</div>
-                        <div id="sidebar-role" class="text-[10px] font-bold text-slate-400 uppercase">Instructor</div>
+                        <div id="sidebar-role" class="text-[10px] font-bold text-slate-400 uppercase"></div>
                     </div>
                     <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -209,22 +216,6 @@
                     </button>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const user = Auth.getCurrentUser();
-                    if (user) {
-                        document.getElementById('sidebar-name').textContent = user.name;
-                        document.getElementById('sidebar-avatar').src = user.avatar;
-                        // document.getElementById('sidebar-role').textContent = user.role.toUpperCase();
-                    }
-
-                    document.getElementById('logout-btn').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        Auth.logout();
-                    });
-                });
-            </script>
         </aside>
 
         <!-- Main Content -->
@@ -438,18 +429,19 @@
                         lDate.getMonth() === date.getMonth() &&
                         lDate.getFullYear() === date.getFullYear();
                 }).map(l => {
-                    // Enrich with calculated fields for UI
                     const d = new Date(l.isoDate);
                     const hours = d.getHours().toString().padStart(2, '0');
                     const minutes = d.getMinutes().toString().padStart(2, '0');
                     const startTime = `${hours}:${minutes}`;
+                    // Use duration from Notion (already processed in netlify function)
+                    const actualDuration = l.duration || 60;
 
-                    // Generate instanceId needed for modal opening
                     const instanceId = l.pageId + '_' + d.getTime();
 
                     return {
                         ...l,
                         startTime,
+                        duration: actualDuration,
                         instanceId
                     };
                 }).sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -466,9 +458,7 @@
                 return `${formatTime(start)} - ${formatTime(end)}`;
             }
 
-            function getLessonSubtitle(type) {
-                return type === 'conversation' ? 'Conversation Practice' : 'Private Lesson';
-            }
+
 
             function updateTimeLine() {
                 // Implementation for red current-time line if needed
@@ -517,7 +507,8 @@
 
                 // Update active groups from Notion Data
                 if (typeof NOTION_GROUPS !== 'undefined') {
-                    activeGroupsCount.textContent = `${NOTION_GROUPS.length} Groups`;
+                    const filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
+                    activeGroupsCount.textContent = `${filteredGroups.length} Groups`;
                 }
             }
 
@@ -655,6 +646,7 @@
                 scrollArea.style.height = '600px';
 
                 // Render slots: 7 AM to 10 PM
+                // Render background grid
                 for (let hour = 7; hour <= 22; hour++) {
                     const displayHour = hour % 12 || 12;
                     const ampm = hour < 12 ? 'AM' : 'PM';
@@ -667,35 +659,46 @@
 
                     for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
                         const cell = document.createElement('div');
-                        cell.className = 'calendar-cell hover:bg-slate-50 transition-colors';
-
-                        // Check for lessons in this slot
-                        const dayLessons = getLessonsForDate(weekDates[dayIndex]);
-                        const lessonsAtHour = dayLessons.filter(l => parseInt(l.startTime.split(':')[0]) === hour);
-
-                        lessonsAtHour.forEach(lesson => {
-                            const card = document.createElement('div');
-                            card.className = 'event-card absolute inset-0 z-10 cursor-pointer hover:brightness-95 transition-all';
-                            card.style.backgroundColor = lesson.color + '20'; // Light version for bg
-                            card.style.borderLeft = `4px solid ${lesson.color} `;
-
-                            // Store lesson and add click handler
-                            currentViewLessons.set(lesson.instanceId, lesson);
-                            card.onclick = () => window.openLessonModal(lesson.instanceId);
-
-                            card.innerHTML = `
-                                <div class="flex justify-between items-start text-[9px] font-bold leading-none mb-0.5" style="color: ${lesson.color}">
-                                    <span>${lesson.id}</span>
-                                </div>
-                                <div class="text-[10px] font-black text-slate-700 leading-none mb-0.5">${lesson.title}</div>
-                                <div class="text-[9px] text-slate-500 leading-none">${lesson.startTime} (${lesson.duration}m)</div>
-                            `;
-                            cell.appendChild(card);
-                        });
-
+                        cell.className = 'calendar-cell relative';
+                        cell.setAttribute('data-day-index', dayIndex);
+                        cell.setAttribute('data-hour', hour);
                         bodyGrid.appendChild(cell);
                     }
                 }
+
+                // Inject lessons as absolute elements over the grid
+                weekDates.forEach((date, dayIndex) => {
+                    const lessons = getLessonsForDate(date);
+                    lessons.forEach(lesson => {
+                        const [h, m] = lesson.startTime.split(':').map(Number);
+                        const topOffset = (h - 7) * 60 + m;
+                        const height = lesson.duration;
+
+                        const card = document.createElement('div');
+                        card.className = 'event-card cursor-pointer hover:brightness-95 transition-all group';
+                        card.style.backgroundColor = lesson.color + '20';
+                        card.style.borderLeft = `4px solid ${lesson.color}`;
+                        card.style.top = `${topOffset}px`;
+                        card.style.height = `${height - 4}px`; // Subtract margin
+
+                        // Scale based on week view grid (80px time col + 7 day cols)
+                        const columnWidth = (bodyGrid.offsetWidth - 80) / 7;
+                        card.style.left = `${80 + (dayIndex * columnWidth)}px`;
+                        card.style.width = `${columnWidth - 8}px`;
+
+                        currentViewLessons.set(lesson.instanceId, lesson);
+                        card.onclick = () => window.openLessonModal(lesson.instanceId);
+
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start text-[8px] font-bold leading-none mb-1" style="color: ${lesson.color}">
+                                <span>${lesson.id}</span>
+                            </div>
+                            <div class="text-[10px] font-black text-slate-700 leading-tight mb-1 truncate">${lesson.title}</div>
+                            <div class="text-[9px] text-slate-500 font-bold leading-none">${lesson.startTime} • ${lesson.duration}m</div>
+                        `;
+                        bodyGrid.appendChild(card);
+                    });
+                });
 
                 updateTimeLine();
                 scrollArea.scrollTop = getCurrentScrollPosition();
@@ -792,34 +795,47 @@
                     bodyGrid.appendChild(labelCell);
 
                     const cell = document.createElement('div');
-                    cell.className = 'calendar-cell hover:bg-slate-50 transition-colors';
-
-                    const dayLessons = getLessonsForDate(currentDate);
-                    const lessonsAtHour = dayLessons.filter(l => parseInt(l.startTime.split(':')[0]) === hour);
-
-                    lessonsAtHour.forEach(lesson => {
-                        const card = document.createElement('div');
-                        card.className = 'event-card absolute inset-0 z-10 cursor-pointer hover:brightness-95 transition-all';
-                        card.style.backgroundColor = lesson.color + '20';
-                        card.style.borderLeft = `4px solid ${lesson.color} `;
-
-                        // Store lesson and add click handler
-                        currentViewLessons.set(lesson.instanceId, lesson);
-                        card.onclick = () => window.openLessonModal(lesson.instanceId);
-
-                        card.innerHTML = `
-                            <div class="flex justify-between items-start text-[10px] font-bold leading-none mb-0.5" style="color: ${lesson.color}">
-                                <span>${lesson.id}</span>
-                                <span>${lesson.type.toUpperCase()}</span>
-                            </div>
-                            <div class="text-xs font-black text-slate-700 leading-none mb-0.5">${lesson.title}</div>
-                            <div class="text-[10px] text-slate-500 leading-none">${lesson.startTime} • ${lesson.duration} mins • ${lesson.teacher}</div>
-                        `;
-                        cell.appendChild(card);
-                    });
-
+                    cell.className = 'calendar-cell hover:bg-slate-50 relative';
                     bodyGrid.appendChild(cell);
                 }
+
+                const dayLessons = getLessonsForDate(currentDate);
+                dayLessons.forEach(lesson => {
+                    const [h, m] = lesson.startTime.split(':').map(Number);
+                    const topOffset = (h - 7) * 60 + m;
+                    const height = lesson.duration;
+
+                    const card = document.createElement('div');
+                    card.className = 'event-card cursor-pointer hover:brightness-95 transition-all';
+                    card.style.backgroundColor = lesson.color + '20';
+                    card.style.borderLeft = `4px solid ${lesson.color}`;
+                    card.style.top = `${topOffset}px`;
+                    card.style.height = `${height - 4}px`;
+
+                    card.style.left = `84px`; // Just after time col
+                    card.style.width = `calc(100% - 90px)`;
+
+                    currentViewLessons.set(lesson.instanceId, lesson);
+                    card.onclick = () => window.openLessonModal(lesson.instanceId);
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center mb-1.5 pt-0.5">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <span class="text-[11px] font-black whitespace-nowrap" style="color: ${lesson.color}">${lesson.id}</span>
+                                <span class="text-sm font-bold text-slate-800 leading-tight truncate">${lesson.title}</span>
+                            </div>
+                            <span class="text-[10px] font-black uppercase tracking-wider pl-4" style="color: ${lesson.color}">${lesson.type}</span>
+                        </div>
+                        <div class="text-[10px] text-slate-500 font-bold leading-none flex items-center gap-1.5 opacity-80">
+                            <span>${lesson.startTime}</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span>${lesson.duration} mins</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span class="truncate">${lesson.teacher}</span>
+                        </div>
+                    `;
+                    bodyGrid.appendChild(card);
+                });
                 updateTimeLine();
                 scrollArea.scrollTop = getCurrentScrollPosition();
             }
@@ -866,6 +882,7 @@
 
                     updateUI();
 
+
                     // Refresh time line every minute
                     setInterval(updateTimeLine, 60000);
                 } catch (error) {
@@ -873,66 +890,62 @@
                 }
             }
 
-            init();
-        });
+            // Move the closing bracket further down to include modal functions in this scope
 
-        // Modal Functions
-        window.openLessonModal = function (instanceId) {
-            currentLesson = currentViewLessons.get(instanceId);
-            if (!currentLesson) return;
-            renderLessonDetails();
-            modal.classList.remove('hidden');
-        }
+            // Modal Functions
+            window.openLessonModal = function (instanceId) {
+                currentLesson = currentViewLessons.get(instanceId);
+                if (!currentLesson) return;
+                renderLessonDetails();
+                modal.classList.remove('hidden');
+            }
 
-        // Helper to get subtitle
-        function getLessonSubtitle(type) {
-            const subtitles = {
-                'group': 'General English Group',
-                'private': 'One-on-One Private Session',
-                'conversation': 'Advanced Speaking & Fluency'
-            };
-            return subtitles[type] || 'English Lesson';
-        }
+            // Helper to get subtitle
+            function getLessonSubtitle(type) {
+                const subtitles = {
+                    'group': 'General English Group',
+                    'private': 'One-on-One Private Session',
+                    'conversation': 'Advanced Speaking & Fluency'
+                };
+                return subtitles[type] || 'English Lesson';
+            }
 
-        // Helper to get time string
-        function getLessonTimeString(startTime, duration) {
-            const [startHour, startMin] = startTime.split(':').map(Number);
-            const endDate = new Date();
-            endDate.setHours(startHour, startMin + duration);
-            const endHour = endDate.getHours();
-            const endMin = endDate.getMinutes();
-            const endAmPm = endHour >= 12 ? 'PM' : 'AM';
-            const startAmPm = startHour >= 12 ? 'PM' : 'AM';
-            const displayStartHour = startHour % 12 || 12;
-            const displayEndHour = endHour % 12 || 12;
-            return `${displayStartHour}:${startMin.toString().padStart(2, '0')} ${startAmPm} - ${displayEndHour}:${endMin.toString().padStart(2, '0')} ${endAmPm} `;
-        }
+            // Helper to get time string
+            function getLessonTimeString(startTime, duration) {
+                const [startHour, startMin] = startTime.split(':').map(Number);
+                const endDate = new Date();
+                endDate.setHours(startHour, startMin + duration);
+                const endHour = endDate.getHours();
+                const endMin = endDate.getMinutes();
+                const endAmPm = endHour >= 12 ? 'PM' : 'AM';
+                const startAmPm = startHour >= 12 ? 'PM' : 'AM';
+                const displayStartHour = startHour % 12 || 12;
+                const displayEndHour = endHour % 12 || 12;
+                return `${displayStartHour}:${startMin.toString().padStart(2, '0')} ${startAmPm} - ${displayEndHour}:${endMin.toString().padStart(2, '0')} ${endAmPm} `;
+            }
 
-        // Render Default Details View
-        function renderLessonDetails() {
-            modalPanel.classList.remove('sm:max-w-5xl');
-            modalPanel.classList.add('sm:max-w-md');
+            // Render Default Details View
+            function renderLessonDetails() {
+                modalPanel.classList.remove('sm:max-w-5xl');
+                modalPanel.classList.add('sm:max-w-md');
 
-            const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
-            const subtitle = getLessonSubtitle(currentLesson.type);
+                const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
+                const subtitle = getLessonSubtitle(currentLesson.type);
 
-            // Generate Students List HTML
-            let studentsHtml = '';
-            const students = currentLesson.students || []; // Fallback to empty array
+                // Generate Students List HTML
+                let studentsHtml = '';
+                const students = currentLesson.students || []; // Fallback to empty array
 
-            students.forEach((student, index) => {
-                studentsHtml += `
-                        <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                            <div class="flex items-center gap-3">
-                                <img src="${student.avatar}" class="w-8 h-8 rounded-full border border-slate-100" alt="${student.name}">
-                                <div class="text-xs font-bold text-slate-700">${student.name}</div>
-                            </div>
-                            <div class="w-5 h-5 rounded-full border-2 border-slate-200 cursor-pointer hover:border-[#2563eb]"></div>
+                students.forEach((student, index) => {
+                    studentsHtml += `
+                        <div class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                            <img src="${student.avatar}" class="w-8 h-8 rounded-full border border-slate-100" alt="${student.name}">
+                            <div class="text-xs font-bold text-slate-700">${student.name}</div>
                         </div>
                     `;
-            });
+                });
 
-            modalContent.innerHTML = `
+                modalContent.innerHTML = `
                     <!-- Blue Header -->
                     <div class="bg-[#2563eb] p-6 text-white relative">
                         <button onclick="closeModal()" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
@@ -967,8 +980,7 @@
 
                                 <div class="mb-8">
                                     <div class="flex justify-between items-center mb-4">
-                                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">ENROLLED STUDENTS (${currentLesson.studentCount})</div>
-                                        <button class="text-[10px] font-bold text-[#2563eb] hover:underline cursor-pointer">Select All</button>
+                                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">ENROLLED STUDENTS (${students.length})</div>
                                     </div>
                                     <div class="space-y-3 max-h-[200px] overflow-y-auto pr-2">
                                         ${studentsHtml}
@@ -985,22 +997,22 @@
                                 </div>
                             </div>
                         `;
-        }
+            }
 
-        // Render Split Attendance View
-        window.renderAttendanceView = function () {
-            modalPanel.classList.remove('sm:max-w-md');
-            modalPanel.classList.add('sm:max-w-5xl');
+            // Render Split Attendance View
+            window.renderAttendanceView = function () {
+                modalPanel.classList.remove('sm:max-w-md');
+                modalPanel.classList.add('sm:max-w-5xl');
 
-            const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
-            const subtitle = getLessonSubtitle(currentLesson.type);
+                const timeString = getLessonTimeString(currentLesson.startTime, currentLesson.duration);
+                const subtitle = getLessonSubtitle(currentLesson.type);
 
-            // Students for Attendance List
-            let attendanceRowsHtml = '';
-            const students = currentLesson.students || [];
+                // Students for Attendance List
+                let attendanceRowsHtml = '';
+                const students = currentLesson.students || [];
 
-            students.forEach((student, index) => {
-                attendanceRowsHtml += `
+                students.forEach((student, index) => {
+                    attendanceRowsHtml += `
                         <div class="bg-white border border-slate-100 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                             <div class="flex items-center gap-3">
                                 <img src="${student.avatar}" class="w-10 h-10 rounded-full border border-slate-100" alt="${student.name}">
@@ -1012,22 +1024,22 @@
                             </div>
                         </div>
                             `;
-            });
+                });
 
-            // Avatars for Left Panel
-            let avatarsHtml = '<div class="flex -space-x-2 overflow-hidden py-2">';
-            const displayedStudents = students.slice(0, 5);
+                // Avatars for Left Panel
+                let avatarsHtml = '<div class="flex -space-x-2 overflow-hidden py-2">';
+                const displayedStudents = students.slice(0, 5);
 
-            displayedStudents.forEach(student => {
-                avatarsHtml += `<img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="${student.avatar}" alt="${student.name}" />`;
-            });
+                displayedStudents.forEach(student => {
+                    avatarsHtml += `<img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="${student.avatar}" alt="${student.name}" />`;
+                });
 
-            if (students.length > 5) {
-                avatarsHtml += `<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 text-[10px] font-bold text-slate-500">+${students.length - 5}</div>`;
-            }
-            avatarsHtml += '</div>';
+                if (students.length > 5) {
+                    avatarsHtml += `<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 text-[10px] font-bold text-slate-500">+${students.length - 5}</div>`;
+                }
+                avatarsHtml += '</div>';
 
-            modalContent.innerHTML = `
+                modalContent.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 h-[600px]">
                         <!-- LEFT COLUMN: Summary -->
                         <div class="bg-[#2563eb] text-white p-8 flex flex-col justify-between relative overflow-hidden">
@@ -1090,59 +1102,59 @@
                             </div>
                     </div>
                 `;
-        }
-
-        // Student Status Toggle Logic
-        window.toggleStudentStatus = function (btn, status) {
-            const container = btn.parentElement;
-            const buttons = container.querySelectorAll('button');
-
-            // Reset all
-            buttons.forEach(b => {
-                b.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold text-slate-400 hover:bg-white hover:shadow-sm transition-all";
-            });
-
-            // Set Active
-            if (status === 'present') {
-                btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-green-600 shadow-sm border border-green-100";
-                container.setAttribute('data-status', 'present');
-            } else if (status === 'absent') {
-                btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-red-500 shadow-sm border border-red-100";
-                container.setAttribute('data-status', 'absent');
             }
-        }
 
-        window.saveAttendance = async function (btn) {
-            const originalContent = btn.innerHTML;
-            const rows = document.querySelectorAll('.student-attendance-row');
-            const absentPageIds = [];
+            // Student Status Toggle Logic
+            window.toggleStudentStatus = function (btn, status) {
+                const container = btn.parentElement;
+                const buttons = container.querySelectorAll('button');
 
-            rows.forEach(row => {
-                if (row.getAttribute('data-status') === 'absent') {
-                    absentPageIds.push(row.getAttribute('data-page-id'));
+                // Reset all
+                buttons.forEach(b => {
+                    b.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold text-slate-400 hover:bg-white hover:shadow-sm transition-all";
+                });
+
+                // Set Active
+                if (status === 'present') {
+                    btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-green-600 shadow-sm border border-green-100";
+                    container.setAttribute('data-status', 'present');
+                } else if (status === 'absent') {
+                    btn.className = "flex-1 px-4 py-1.5 rounded-md text-[10px] font-bold transition-all bg-white text-red-500 shadow-sm border border-red-100";
+                    container.setAttribute('data-status', 'absent');
                 }
-            });
-
-            const lessonPageId = currentLesson.pageId;
-
-            // UUID Validation Regex
-            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-            if (!lessonPageId || !uuidRegex.test(lessonPageId)) {
-                alert(`❌ Sync Error: Invalid lesson Page ID (${lessonPageId}).\n\nPlease run "node scripts/update-data.js" with your API key to sync real Notion data before marking attendance.`);
-                return;
             }
 
-            // Verify student IDs are also real UUIDs
-            const invalidStudentIds = absentPageIds.filter(id => !uuidRegex.test(id));
-            if (invalidStudentIds.length > 0) {
-                alert(`❌ Sync Error: One or more students have invalid IDs (${invalidStudentIds[0]}...).\n\nPlease run the sync script to update your local student database.`);
-                return;
-            }
+            window.saveAttendance = async function (btn) {
+                const originalContent = btn.innerHTML;
+                const rows = document.querySelectorAll('.student-attendance-row');
+                const absentPageIds = [];
 
-            try {
-                btn.disabled = true;
-                btn.innerHTML = `
+                rows.forEach(row => {
+                    if (row.getAttribute('data-status') === 'absent') {
+                        absentPageIds.push(row.getAttribute('data-page-id'));
+                    }
+                });
+
+                const lessonPageId = currentLesson.pageId;
+
+                // UUID Validation Regex
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+                if (!lessonPageId || !uuidRegex.test(lessonPageId)) {
+                    alert(`❌ Sync Error: Invalid lesson Page ID (${lessonPageId}).\n\nPlease run "node scripts/update-data.js" with your API key to sync real Notion data before marking attendance.`);
+                    return;
+                }
+
+                // Verify student IDs are also real UUIDs
+                const invalidStudentIds = absentPageIds.filter(id => !uuidRegex.test(id));
+                if (invalidStudentIds.length > 0) {
+                    alert(`❌ Sync Error: One or more students have invalid IDs (${invalidStudentIds[0]}...).\n\nPlease run the sync script to update your local student database.`);
+                    return;
+                }
+
+                try {
+                    btn.disabled = true;
+                    btn.innerHTML = `
                         <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -1150,41 +1162,44 @@
                         SAVING...
                     `;
 
-                const response = await fetch('/.netlify/functions/mark-attendance', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        lessonPageId: lessonPageId,
-                        absentPageIds: absentPageIds
-                    })
-                });
+                    const response = await fetch('/.netlify/functions/mark-attendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            lessonPageId: lessonPageId,
+                            absentPageIds: absentPageIds
+                        })
+                    });
 
-                const result = await response.json();
+                    const result = await response.json();
 
-                if (!response.ok) throw new Error(result.error || 'Failed to sync with Notion');
+                    if (!response.ok) throw new Error(result.error || 'Failed to sync with Notion');
 
-                alert('✅ Success! Attendance has been synced with Notion.');
-                closeModal();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Connection Error: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
+                    alert('✅ Success! Attendance has been synced with Notion.');
+                    closeModal();
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Connection Error: ' + error.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
             }
-        }
 
-        window.closeModal = function () {
-            modal.classList.add('hidden');
-            // Optional: reset to default size after transition
-            setTimeout(() => {
-                modalPanel.classList.remove('sm:max-w-5xl');
-                modalPanel.classList.add('sm:max-w-md');
-            }, 200);
-        }
+            window.closeModal = function () {
+                modal.classList.add('hidden');
+                // Optional: reset to default size after transition
+                setTimeout(() => {
+                    modalPanel.classList.remove('sm:max-w-5xl');
+                    modalPanel.classList.add('sm:max-w-md');
+                }, 200);
+            }
 
-        modalBackdrop.addEventListener('click', closeModal);
 
+            modalBackdrop.addEventListener('click', closeModal);
+
+            init();
+        });
     </script>
 </body>
 

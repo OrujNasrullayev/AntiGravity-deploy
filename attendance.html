@@ -19,29 +19,20 @@
 <body class="bg-[#f5f7fb]">
 
     <div class="dashboard-container">
-        <!-- Sidebar Match Image 2 -->
-        <aside class="sidebar" style="width: 260px; flex-shrink: 0;">
+        <!-- Sidebar Matches Teacher Portal -->
+        <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="font-script text-3xl leading-none text-white">Oruj's</span>
-                </div>
-                <div class="font-black text-[10px] uppercase tracking-[0.3em] text-white/60 mb-8">ENGLISH</div>
-
-                <!-- Profile Card inside Sidebar -->
-                <div class="sidebar-profile-card">
-                    <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg border-2 border-white/20">
-                        <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=Student&background=random"
-                            alt="Profile">
-                    </div>
+                <div class="flex items-center gap-3 px-2">
+                    <img src="assets/img/logo.png" alt="Oruj Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm">
                     <div>
-                        <div id="sidebar-name" class="text-xs font-black text-white">Loading...</div>
-                        <div id="sidebar-role" class="text-[9px] font-bold text-white/50 uppercase tracking-widest">
-                            Student</div>
+                        <h1 class="text-lg font-extrabold text-[#0f172a] leading-tight tracking-tight">ORUJ'S ENGLISH
+                        </h1>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Student's Portal</p>
                     </div>
                 </div>
             </div>
 
-            <nav class="sidebar-nav flex-grow">
+            <nav class="sidebar-nav flex-grow space-y-2">
                 <a href="attendance.html" class="sidebar-link active">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -60,7 +51,6 @@
                             </svg>
                             <span>Homework</span>
                         </div>
-                        <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">2</span>
                     </div>
                 </a>
                 <a href="feedback.html" class="sidebar-link">
@@ -73,35 +63,39 @@
                 </a>
             </nav>
 
-            <div class="sidebar-footer border-t border-slate-100 pb-10">
-                <button id="logout-btn" class="sidebar-link opacity-60 w-full text-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    <span>Logout</span>
-                </button>
+            <div class="sidebar-footer border-t border-slate-100">
+                <div class="flex items-center gap-3 px-2 mt-4">
+                    <img id="sidebar-avatar"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""
+                        class="w-10 h-10 rounded-full object-cover bg-slate-100">
+                    <div class="flex-grow">
+                        <div id="sidebar-name" class="text-sm font-bold text-[#0f172a]">Loading...</div>
+                        <div id="sidebar-role" class="text-[10px] font-bold text-slate-400 uppercase">Student</div>
+                    </div>
+                    <button id="logout-btn"
+                        class="text-slate-400 hover:text-red-500 transition-colors tooltip relative group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const user = Auth.getCurrentUser();
-                    if (user) {
-                        document.getElementById('sidebar-name').textContent = user.name;
-                        document.getElementById('sidebar-avatar').src = user.avatar;
-                    }
-
-                    document.getElementById('logout-btn').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        Auth.logout();
-                    });
-                });
-            </script>
         </aside>
 
         <!-- Main View -->
-        <main class="view-container">
+        <main class="view-container relative">
+            <!-- Loading Overlay -->
+            <div id="loading-overlay"
+                class="absolute inset-0 z-[100] bg-white/80 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin">
+                    </div>
+                    <p class="text-blue-600 font-bold text-sm uppercase tracking-widest animate-pulse">Loading Notion
+                        Data...</p>
+                </div>
+            </div>
             <!-- Header with Search -->
             <header class="flex justify-between items-center mb-6">
                 <div>
@@ -130,6 +124,18 @@
                     </button>
                 </div>
             </header>
+
+            <!-- Timeframe Selector -->
+            <div class="flex items-center justify-start mb-6">
+                <div class="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm" id="timeframe-switcher">
+                    <button data-period="total"
+                        class="px-6 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm">Total</button>
+                    <button data-period="this-month"
+                        class="px-6 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-600">This Month</button>
+                    <button data-period="last-month"
+                        class="px-6 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-600">Last Month</button>
+                </div>
+            </div>
 
             <!-- Stats Grid Match Image 2 -->
             <div id="stats-grid" class="grid lg:grid-cols-3 gap-6 mb-10">
@@ -200,54 +206,71 @@
             <section class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-10">
                 <div id="calendar-body">
                     <div id="calendar-header"
-                        class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
-                        <div class="flex items-center gap-4">
+                        class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20">
+                        <div class="flex items-center gap-8">
                             <h2 id="current-month" class="text-xl font-black text-slate-800 tracking-tight">Loading...
                             </h2>
-                            <div class="flex gap-1">
-                                <button onclick="changeMonth(-1)"
-                                    class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                            <div class="flex bg-slate-50 border border-slate-100 rounded-xl p-1" id="view-switcher">
+                                <button data-view="month"
+                                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-600 shadow-sm">Month</button>
+                                <button data-view="day"
+                                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-600">Day</button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="hidden lg:flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 border-r border-slate-100 pr-6">
+                                <span class="flex items-center gap-1.5"><span
+                                        class="w-2 h-2 rounded-full bg-emerald-500"></span> Attended</span>
+                                <span class="flex items-center gap-1.5"><span
+                                        class="w-2 h-2 rounded-full bg-rose-500"></span> Missed</span>
+                                <span class="flex items-center gap-1.5"><span
+                                        class="w-2 h-2 rounded-full bg-blue-500"></span> Upcoming</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeDate(-1)"
+                                    class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors border border-slate-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M15 19l-7-7 7-7" />
                                     </svg>
                                 </button>
-                                <button onclick="changeMonth(1)"
-                                    class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                <button onclick="goToToday()"
+                                    class="px-4 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">Today</button>
+                                <button onclick="changeDate(1)"
+                                    class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors border border-slate-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M9 5l7 7-7 7" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        <div
-                            class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                            <span class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full bg-emerald-500"></span> Attended</span>
-                            <span class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full bg-rose-500"></span> Missed</span>
-                            <span class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full bg-blue-500"></span> Upcoming</span>
+                    </div>
+
+                    <div class="calendar-view-area">
+                        <div id="calendar-day-headers" class="calendar-grid border-b border-slate-100">
+                            <!-- Headers labels injected here -->
+                            <div class="calendar-day-header">MON</div>
+                            <div class="calendar-day-header">TUE</div>
+                            <div class="calendar-day-header">WED</div>
+                            <div class="calendar-day-header">THU</div>
+                            <div class="calendar-day-header">FRI</div>
+                            <div class="calendar-day-header text-rose-500">SAT</div>
+                            <div class="calendar-day-header text-rose-500">SUN</div>
+                        </div>
+
+                        <div class="calendar-scroll-area" id="calendar-scroll-area">
+                            <div id="calendar-grid" class="calendar-grid">
+                                <!-- Dynamic Grid will be injected here -->
+                            </div>
                         </div>
                     </div>
-
-                    <div id="calendar-grid" class="calendar-grid">
-                        <!-- Headers -->
-                        <div class="calendar-day-header">MON</div>
-                        <div class="calendar-day-header">TUE</div>
-                        <div class="calendar-day-header">WED</div>
-                        <div class="calendar-day-header">THU</div>
-                        <div class="calendar-day-header">FRI</div>
-                        <div class="calendar-day-header text-rose-500">SAT</div>
-                        <div class="calendar-day-header text-rose-500">SUN</div>
-
-                        <!-- Dynamic Grid will be injected here -->
-                    </div>
                 </div>
-            </section>
             </section>
 
             <!-- Recent Feedback Section -->
@@ -260,38 +283,340 @@
             </section>
 
             <script>
+                let currentView = 'month';
                 let currentViewDate = new Date();
+                let currentStatsPeriod = 'total';
 
                 async function init() {
-                    await DataLoader.waitForData();
-                    const user = Auth.getCurrentUser();
-                    if (!user) return;
+                    const overlay = document.getElementById('loading-overlay');
+                    try {
+                        await DataLoader.waitForData();
+                        const user = Auth.getCurrentUser();
+                        if (!user) return;
 
-                    // 1. Stats
-                    const studentData = NOTION_STUDENTS.find(s => s.id === user.id);
-                    if (studentData) {
-                        document.getElementById('attendance-rate').textContent = Math.round(studentData.attendanceRate) + '%';
-                        document.getElementById('lessons-completed').innerHTML = `${studentData.attendedLessons}<span class="text-blue-200 text-xl font-medium">/${studentData.totalLessons}</span>`;
+                        // 1. Stats Setup
+                        setupTimeframeSwitcher();
+                        updateStats('total');
 
-                        const missed = studentData.totalLessons - studentData.attendedLessons;
-                        document.getElementById('missed-lessons').textContent = Math.max(0, missed);
+                        // 2. Feedback
+                        renderFeedback();
+
+                        // 3. View Switcher setup
+                        setupViewSwitcher();
+
+                        // 4. Initial Render
+                        renderCalendar();
+
+                        if (overlay) {
+                            overlay.style.opacity = '0';
+                            setTimeout(() => overlay.remove(), 300);
+                        }
+                    } catch (e) {
+                        console.error("Init failed", e);
+                        if (overlay) overlay.remove();
                     }
-
-                    // 2. Feedback
-                    renderFeedback();
-
-                    // 3. Calendar
-                    renderCalendar();
                 }
 
                 document.addEventListener('DOMContentLoaded', init);
+
+                function setupTimeframeSwitcher() {
+                    const switcher = document.getElementById('timeframe-switcher');
+                    if (!switcher) return;
+                    const btns = switcher.querySelectorAll('button');
+                    btns.forEach(btn => {
+                        btn.onclick = () => {
+                            currentStatsPeriod = btn.dataset.period;
+                            btns.forEach(b => {
+                                b.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+                                b.classList.add('text-slate-400');
+                            });
+                            btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+                            btn.classList.remove('text-slate-400');
+                            updateStats(currentStatsPeriod);
+                        };
+                    });
+                }
+
+                function updateStats(period) {
+                    const user = Auth.getCurrentUser();
+                    if (!user) return;
+
+                    const allLessons = Auth.filterData(NOTION_LESSONS);
+                    const now = new Date(); // Source of truth: March 2026 based on metadata
+                    const currentMonth = now.getMonth();
+                    const currentYear = now.getFullYear();
+
+                    let filteredLessons = allLessons;
+                    
+                    if (period === 'this-month') {
+                        filteredLessons = allLessons.filter(l => {
+                            const date = new Date(l.isoDate);
+                            return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+                        });
+                    } else if (period === 'last-month') {
+                        const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                        const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                        filteredLessons = allLessons.filter(l => {
+                            const date = new Date(l.isoDate);
+                            return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear;
+                        });
+                    }
+
+                    // Only count lessons that were supposed to happen (i.e. not Cancelled)
+                    const relevantLessons = filteredLessons.filter(l => l.status !== 'Cancelled');
+                    
+                    // Completed lessons for total count in denominator (excluding future ones for "completed" count)
+                    const pastLessons = relevantLessons.filter(l => l.status === 'Completed' || l.status === 'Late' || l.status === 'Missed' || (new Date(l.isoDate) < now && l.status !== 'Upcoming' && l.status !== 'Scheduled'));
+                    
+                    const attendedCount = pastLessons.filter(l => {
+                        const isAbsent = l.absentStudents && l.absentStudents.some(s => Auth.compareIds(s.id, user.id));
+                        return !isAbsent && (l.status === 'Completed' || l.status === 'Late');
+                    }).length;
+                    
+                    const totalPastCount = pastLessons.length;
+                    
+                    const rate = totalPastCount > 0 ? Math.round((attendedCount / totalPastCount) * 100) : 0;
+                    const missed = totalPastCount - attendedCount;
+
+                    document.getElementById('attendance-rate').textContent = rate + '%';
+                    document.getElementById('lessons-completed').innerHTML = `${attendedCount}<span class="text-blue-200 text-xl font-medium">/${totalPastCount}</span>`;
+                    document.getElementById('missed-lessons').textContent = Math.max(0, missed);
+
+                    // Update upcoming lesson indicator
+                    const upcoming = filteredLessons.filter(l => l.status === 'Upcoming' || l.status === 'Scheduled');
+                    const remainingEl = document.getElementById('lessons-remaining');
+                    if (remainingEl) {
+                        if (upcoming.length > 0) {
+                            remainingEl.textContent = `${upcoming.length} upcoming lessons`;
+                        } else {
+                            remainingEl.textContent = 'No upcoming lessons';
+                        }
+                    }
+                }
+
+                function setupViewSwitcher() {
+                    const switcher = document.getElementById('view-switcher');
+                    const btns = switcher.querySelectorAll('button');
+                    btns.forEach(btn => {
+                        btn.onclick = () => {
+                            currentView = btn.dataset.view;
+                            btns.forEach(b => {
+                                b.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+                                b.classList.add('text-slate-400');
+                            });
+                            btn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+                            btn.classList.remove('text-slate-400');
+                            renderCalendar();
+                        };
+                    });
+                }
+
+                function changeDate(delta) {
+                    if (currentView === 'month') {
+                        currentViewDate.setMonth(currentViewDate.getMonth() + delta);
+                    } else {
+                        currentViewDate.setDate(currentViewDate.getDate() + delta);
+                    }
+                    renderCalendar();
+                }
+
+                function goToToday() {
+                    currentViewDate = new Date();
+                    renderCalendar();
+                }
+
+                function getLessonsForDate(date) {
+                    const myLessons = Auth.filterData(NOTION_LESSONS);
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const day = date.getDate();
+
+                    return myLessons.filter(l => {
+                        if (!l.isoDate) return false;
+                        const d = new Date(l.isoDate);
+                        return d.getFullYear() === year && d.getMonth() === month && d.getDate() === day;
+                    }).map(l => {
+                        const d = new Date(l.isoDate);
+                        const hours = d.getHours().toString().padStart(2, '0');
+                        const minutes = d.getMinutes().toString().padStart(2, '0');
+                        return {
+                            ...l,
+                            startTime: `${hours}:${minutes}`,
+                            duration: l.duration || 60
+                        };
+                    }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+                }
+
+                function renderCalendar() {
+                    const headers = document.getElementById('calendar-day-headers');
+                    if (currentView === 'month') {
+                        headers.classList.remove('hidden');
+                        renderMonth();
+                    } else {
+                        headers.classList.add('hidden');
+                        renderDay();
+                    }
+                }
+
+                function renderMonth() {
+                    const grid = document.getElementById('calendar-grid');
+                    const monthDisplay = document.getElementById('current-month');
+                    const user = Auth.getCurrentUser();
+
+                    grid.className = 'calendar-grid';
+                    grid.innerHTML = '';
+                    monthDisplay.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(currentViewDate);
+
+                    const year = currentViewDate.getFullYear();
+                    const month = currentViewDate.getMonth();
+                    const firstDay = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    const startPadding = (firstDay === 0 ? 6 : firstDay - 1);
+
+                    const prevMonthLastDay = new Date(year, month, 0).getDate();
+                    for (let i = startPadding - 1; i >= 0; i--) {
+                        const cell = document.createElement('div');
+                        cell.className = 'calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs';
+                        cell.textContent = prevMonthLastDay - i;
+                        grid.appendChild(cell);
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'calendar-cell font-black text-slate-800 text-xs';
+                        cell.textContent = day;
+
+                        const date = new Date(year, month, day);
+                        const dayLessons = getLessonsForDate(date);
+
+                        dayLessons.forEach(l => {
+                            const pill = document.createElement('span');
+                            let pillClass = 'pill-blue';
+                            let statusText = l.startTime;
+
+                            if (l.status === 'Completed') {
+                                pillClass = 'pill-green';
+                                if (l.absentStudents && l.absentStudents.some(s => Auth.compareIds(s.id, user.id))) {
+                                    pillClass = 'pill-red';
+                                    statusText = 'Missed';
+                                }
+                            } else if (l.status === 'Cancelled') {
+                                pillClass = 'pill-red';
+                                statusText = 'Cancelled';
+                            }
+
+                            pill.className = `calendar-pill ${pillClass}`;
+                            pill.innerHTML = `${l.title} <br> ${statusText}`;
+                            cell.appendChild(pill);
+                        });
+
+                        const today = new Date();
+                        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                            cell.className += ' ring-2 ring-blue-500 ring-inset rounded-lg z-10 scale-[1.02] bg-blue-50/30';
+                        }
+                        grid.appendChild(cell);
+                    }
+                }
+
+                function renderDay() {
+                    const grid = document.getElementById('calendar-grid');
+                    const display = document.getElementById('current-month');
+                    const user = Auth.getCurrentUser();
+
+                    display.textContent = currentViewDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                    grid.className = 'calendar-grid view-day';
+                    grid.innerHTML = '';
+
+                    // Time slots from 7 AM to 10 PM
+                    for (let hour = 7; hour <= 22; hour++) {
+                        const displayHour = hour % 12 || 12;
+                        const ampm = hour < 12 ? 'AM' : 'PM';
+                        const timeLabel = `${displayHour.toString().padStart(2, '0')}:00 ${ampm}`;
+
+                        const labelCell = document.createElement('div');
+                        labelCell.className = 'time-slot-label';
+                        labelCell.innerHTML = `<span class="time-label">${timeLabel}</span>`;
+                        grid.appendChild(labelCell);
+
+                        const cell = document.createElement('div');
+                        cell.className = 'calendar-cell view-day relative';
+                        grid.appendChild(cell);
+                    }
+
+                    const dayLessons = getLessonsForDate(currentViewDate);
+                    dayLessons.forEach(l => {
+                        const [h, m] = l.startTime.split(':').map(Number);
+                        const topOffset = (h - 7) * 60 + m;
+                        const height = l.duration;
+
+                        const card = document.createElement('div');
+                        card.className = 'event-card bg-white border border-slate-100 flex flex-col justify-center';
+
+                        let color = l.color || '#2563eb';
+                        let pillClass = 'pill-blue';
+
+                        if (l.status === 'Completed') {
+                            color = '#10b981'; // green
+                            pillClass = 'pill-green';
+                            if (l.absentStudents && l.absentStudents.some(s => Auth.compareIds(s.id, user.id))) {
+                                color = '#ef4444'; // red
+                                pillClass = 'pill-red';
+                            }
+                        } else if (l.status === 'Cancelled') {
+                            color = '#ef4444';
+                            pillClass = 'pill-red';
+                        }
+
+                        card.style.borderLeft = `4px solid ${color}`;
+                        card.style.top = `${topOffset}px`;
+                        card.style.height = `${height - 4}px`;
+
+                        const isAbsent = l.status === 'Completed' && l.absentStudents && l.absentStudents.some(s => Auth.compareIds(s.id, user.id));
+                        const statusText = isAbsent ? 'Missed' : l.status;
+
+                        card.innerHTML = `
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-black uppercase tracking-wider" style="color: ${color}">${l.type}</span>
+                                <span class="calendar-pill ${pillClass} !m-0 !py-0.5 !px-1.5 text-[7px]">${statusText}</span>
+                            </div>
+                            <div class="text-xs font-bold text-slate-800 truncate">${l.title}</div>
+                            <div class="text-[10px] text-slate-400 font-bold mt-0.5">${l.startTime} • ${l.duration}m</div>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                    updateTimeLine();
+                }
+
+                function updateTimeLine() {
+                    const existing = document.getElementById('current-time-line');
+                    if (existing) existing.remove();
+                    if (currentView !== 'day') return;
+
+                    const today = new Date();
+                    if (currentViewDate.toDateString() !== today.toDateString()) return;
+
+                    const startHour = 7;
+                    const endHour = 22;
+                    const hour = today.getHours();
+                    const mins = today.getMinutes();
+
+                    if (hour < startHour || hour >= endHour) return;
+
+                    const top = (hour - startHour) * 60 + mins;
+                    const line = document.createElement('div');
+                    line.id = 'current-time-line';
+                    line.className = 'time-line';
+                    line.style.top = `${top}px`;
+                    document.getElementById('calendar-grid').appendChild(line);
+                }
 
                 function renderFeedback() {
                     const list = document.getElementById('feedback-list');
                     const filteredFeedback = Auth.filterData(NOTION_FEEDBACKS, 'feedback');
 
                     if (filteredFeedback.length > 0) {
-                        list.innerHTML = filteredFeedback.sort((a, b) => new Date(b.date) - new Date(a.date)).map(fb => `
+                        list.innerHTML = filteredFeedback.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map(fb => `
                             <div class="dash-card flex gap-6 animate-fade-in group hover:border-blue-200 transition-all border border-transparent">
                                 <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -309,78 +634,6 @@
                                 </div>
                             </div>
                         `).join('');
-                    }
-                }
-
-                function changeMonth(delta) {
-                    currentViewDate.setMonth(currentViewDate.getMonth() + delta);
-                    renderCalendar();
-                }
-
-                function renderCalendar() {
-                    const grid = document.getElementById('calendar-grid');
-                    const monthDisplay = document.getElementById('current-month');
-                    const user = Auth.getCurrentUser();
-
-                    // Clear previous cells (keep headers)
-                    const cells = grid.querySelectorAll('.calendar-cell');
-                    cells.forEach(c => c.remove());
-
-                    const year = currentViewDate.getFullYear();
-                    const month = currentViewDate.getMonth();
-
-                    monthDisplay.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(currentViewDate);
-
-                    const firstDay = new Date(year, month, 1).getDay(); // 0 is Sun
-                    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                    // Adjust firstDay to start from Monday (1)
-                    const startPadding = (firstDay === 0 ? 6 : firstDay - 1);
-
-                    // Add padding from prev month
-                    const prevMonthLastDay = new Date(year, month, 0).getDate();
-                    for (let i = startPadding - 1; i >= 0; i--) {
-                        const cell = document.createElement('div');
-                        cell.className = 'calendar-cell bg-slate-50 opacity-40 text-slate-400 font-bold text-xs';
-                        cell.textContent = prevMonthLastDay - i;
-                        grid.appendChild(cell);
-                    }
-
-                    // Student specific lessons
-                    const myLessons = Auth.filterData(NOTION_LESSONS);
-
-                    for (let day = 1; day <= daysInMonth; day++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'calendar-cell font-black text-slate-800 text-xs';
-                        cell.textContent = day;
-
-                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        const dayLessons = myLessons.filter(l => l.isoDate.startsWith(dateStr));
-
-                        dayLessons.forEach(l => {
-                            const pill = document.createElement('span');
-                            let pillClass = 'pill-blue'; // upcoming
-                            let statusText = l.time || '';
-
-                            if (l.status === 'Completed') {
-                                pillClass = 'pill-green';
-                            } else if (l.status === 'Missed' || l.status === 'Cancelled') {
-                                pillClass = 'pill-red';
-                                statusText = l.status;
-                            }
-
-                            pill.className = `calendar-pill ${pillClass}`;
-                            pill.innerHTML = `${l.title} <br> ${statusText}`;
-                            cell.appendChild(pill);
-                        });
-
-                        // Highlight current day
-                        const today = new Date();
-                        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                            cell.className += ' ring-2 ring-blue-500 ring-inset rounded-lg z-10 scale-[1.02] bg-blue-50/30';
-                        }
-
-                        grid.appendChild(cell);
                     }
                 }
             </script>

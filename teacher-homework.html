@@ -7,7 +7,7 @@
     <title>Teacher Portal - Homeworks</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
-    <script src="assets/js/lessons.js"></script>
+    <script src="assets/js/data-loader.js"></script>
     <script src="assets/js/auth.js"></script>
     <style>
         .homework-status {
@@ -85,12 +85,12 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img id="user-avatar" src="https://i.pravatar.cc/150?img=11" alt="Profile"
-                        class="w-10 h-10 rounded-full object-cover">
+                    <img id="user-avatar"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""
+                        class="w-10 h-10 rounded-full object-cover bg-slate-100">
                     <div>
-                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
-                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor
-                        </div>
+                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Loading...</div>
+                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase"></div>
                     </div>
                     <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors"
                         title="Logout">
@@ -153,24 +153,55 @@
                 </div>
             </header>
 
-            <div class="mb-10">
-                <h1 class="text-3xl font-extrabold text-[#0f172a] mb-2 tracking-tight">Homework Management</h1>
-                <p class="text-[#64748b] font-medium">Track student submissions and assign new tasks for your groups.
-                </p>
+            <div class="flex justify-between items-end mb-2">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-[#0f172a] mb-2 tracking-tight">Homework Management</h1>
+                    <p class="text-[#64748b] font-medium">Track student submissions and assign new tasks for your
+                        groups.</p>
+                </div>
+                <button onclick="localStorage.removeItem('notion_portal_cache'); location.reload();"
+                    class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Refresh Database
+                </button>
             </div>
 
             <div class="grid grid-cols-[1.5fr_1fr] gap-8">
                 <!-- Review Uploads -->
                 <div>
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#2563eb]" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                            </svg>
-                            Recent Submissions
-                        </h2>
+                    <div class="flex flex-wrap gap-3 mb-6 bg-white border border-slate-200 rounded-xl p-3">
+                        <div class="flex-1 min-w-[140px]">
+                            <label
+                                class="text-[9px] font-extrabold text-slate-400 uppercase mb-1 block px-1">Status</label>
+                            <select id="filter-status"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 focus:outline-none focus:border-blue-400">
+                                <option value="all">All Statuses</option>
+                                <option value="Not checked">Pending</option>
+                                <option value="Checked">Checked</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[140px]">
+                            <label
+                                class="text-[9px] font-extrabold text-slate-400 uppercase mb-1 block px-1">Group</label>
+                            <select id="filter-group"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 focus:outline-none focus:border-blue-400">
+                                <option value="all">All Groups</option>
+                                <!-- Injected via JS -->
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[140px]">
+                            <label
+                                class="text-[9px] font-extrabold text-slate-400 uppercase mb-1 block px-1">Time</label>
+                            <select id="filter-time"
+                                class="w-full bg-slate-50 border border-slate-100 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 focus:outline-none focus:border-blue-400">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div id="submissions-list" class="space-y-4">
@@ -227,23 +258,7 @@
                         </div>
 
 
-                        <div class="space-y-1">
-                            <label
-                                class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resources</label>
-                            <div
-                                class="border-2 border-dashed border-slate-200 rounded-lg p-6 bg-[#f8fafc] text-center cursor-pointer hover:border-[#2563eb] transition-colors">
-                                <div
-                                    class="w-10 h-10 bg-[#eff6ff] text-[#2563eb] rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                    </svg>
-                                </div>
-                                <div class="text-xs font-bold text-[#0f172a]">Click to upload files</div>
-                                <div class="text-[10px] text-slate-400 mt-1">PDF, DOCX, JPG up to 10MB</div>
-                            </div>
-                        </div>
+
 
                         <button type="submit"
                             class="w-full bg-[#2563eb] text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
@@ -262,75 +277,124 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Check authentication
             const user = Auth.checkAuth('teacher');
             if (!user) return;
 
-            // Update Profile UI
-            const nameEl = document.getElementById('user-name');
-            const avatarEl = document.getElementById('user-avatar');
-            const roleEl = document.getElementById('user-role');
-            const logoutBtn = document.getElementById('logout-btn');
-
-            if (nameEl) nameEl.textContent = user.name;
-            if (avatarEl && user.avatar) avatarEl.src = user.avatar;
-            if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Auth.logout();
-                });
-            }
+            // Automatically re-initialize UI if fresh data loads
+            document.addEventListener('portalDataReady', () => {
+                initForm();
+            });
 
             const classSelect = document.getElementById('class-select');
             const lessonSelect = document.getElementById('lesson-select');
             const form = document.getElementById('assign-task-form');
             const submissionsList = document.getElementById('submissions-list');
 
+            const filterStatus = document.getElementById('filter-status');
+            const filterGroup = document.getElementById('filter-group');
+            const filterTime = document.getElementById('filter-time');
+
+
             function initForm() {
-                const filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
-                if (filteredGroups.length > 0) {
-                    const options = filteredGroups.map(group =>
-                        `<option value="${group.id}">${group.id} - ${group.name}</option>`
-                    ).join('');
-                    classSelect.innerHTML += options;
+                try {
+                    const groupsData = window.NOTION_GROUPS || [];
+                    const filteredGroups = Auth.filterData(groupsData, 'groups');
+
+                    console.log("Homework Init - User:", Auth.getCurrentUser());
+                    console.log("Homework Init - All Groups:", groupsData);
+                    console.log("Homework Init - Filtered Groups:", filteredGroups);
+
+                    // Clear and populate both selects with groups
+                    const defaultClassOption = '<option value="">Select a group...</option>';
+                    const defaultFilterOption = '<option value="all">All Groups</option>';
+
+                    // If filtered groups is empty but we have groups, maybe teacherId mismatch?
+                    // Fallback to all groups if none match, but marked as warning
+                    const groupsToUse = filteredGroups.length > 0 ? filteredGroups : groupsData;
+                    if (filteredGroups.length === 0 && groupsData.length > 0) {
+                        console.warn("No groups matched your teacher ID. Showing all groups as fallback.");
+                    }
+
+                    if (groupsToUse.length > 0) {
+                        const optionsMarkup = groupsToUse.map(group =>
+                            `<option value="${group.id}">${group.id} - ${group.name}</option>`
+                        ).join('');
+
+                        classSelect.innerHTML = defaultClassOption + optionsMarkup;
+                        filterGroup.innerHTML = defaultFilterOption + optionsMarkup;
+                    } else {
+                        classSelect.innerHTML = defaultClassOption;
+                        filterGroup.innerHTML = defaultFilterOption;
+                    }
+
+                    renderSubmissions();
+                } catch (err) {
+                    console.error("Error in initForm:", err);
                 }
-                renderSubmissions();
             }
 
+
+
             function renderSubmissions() {
-                const filteredSubmissions = Auth.filterData(NOTION_SUBMISSIONS, 'submissions');
+                const subsData = window.NOTION_SUBMISSIONS || [];
+                let filteredSubmissions = Auth.filterData(subsData, 'submissions');
+
+                // 1. Status Filter
+                if (filterStatus && filterStatus.value !== 'all') {
+                    filteredSubmissions = filteredSubmissions.filter(sub => sub.status === filterStatus.value);
+                }
+
+                // 2. Group Filter
+                if (filterGroup && filterGroup.value !== 'all') {
+                    const selectedGroupId = filterGroup.value;
+                    filteredSubmissions = filteredSubmissions.filter(sub => {
+                        // Support both direct groupId string (legacy) and groupIds array
+                        if (sub.groupId === selectedGroupId) return true;
+                        if (sub.groupIds && Array.isArray(sub.groupIds)) {
+                            return sub.groupIds.includes(selectedGroupId);
+                        }
+                        return false;
+                    });
+                }
+
+                // 3. Time Filter (Sorting by ID or timestamp if available)
+                if (filteredSubmissions && filteredSubmissions.length > 0) {
+                    filteredSubmissions.sort((a, b) => {
+                        const timeVal = filterTime ? filterTime.value : 'newest';
+                        const order = timeVal === 'newest' ? -1 : 1;
+                        const idA = a.id || '';
+                        const idB = b.id || '';
+                        return (idA > idB ? 1 : -1) * order;
+                    });
+                }
+
                 if (typeof filteredSubmissions !== 'undefined' && filteredSubmissions.length > 0) {
                     submissionsList.innerHTML = filteredSubmissions.map(sub => `
                         <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#2563eb] font-bold">
-                                        ${sub.studentName.charAt(0)}
+                                        ${(sub.studentName || 'U').charAt(0)}
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-slate-800 text-sm">${sub.name}</h4>
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">${sub.studentName}</p>
+                                        <h4 class="font-bold text-slate-800 text-sm">${sub.name || 'Untitled'}</h4>
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">${sub.studentName || 'Student'}</p>
                                     </div>
                                 </div>
                                 <span class="px-2 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${sub.status === 'Checked' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
-                                    ${sub.status}
+                                    ${sub.status || 'Pending'}
                                 </span>
                             </div>
+                            ${sub.submissionText ? `
+                                <div class="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-100 italic text-slate-600 text-[13px] leading-relaxed whitespace-pre-wrap">
+                                    ${sub.submissionText}
+                                </div>
+                            ` : ''}
                             <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-50">
                                 <div class="flex gap-2">
-                                    ${sub.uploads.map(file => `
-                                        <a href="${file.url}" target="_blank" class="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            ${file.name}
-                                        </a>
-                                    `).join('')}
                                 </div>
                                 ${sub.status !== 'Checked' ? `
-                                    <button onclick="markAsChecked('${sub.id}', '${sub.name}')" class="px-3 py-1.5 bg-[#2563eb] text-white rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-colors">
+                                    <button onclick="markAsChecked(event, '${sub.id}', '${sub.name}')" class="px-3 py-1.5 bg-[#2563eb] text-white rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-colors">
                                         Mark as Checked
                                     </button>
                                 ` : ''}
@@ -340,30 +404,73 @@
                 } else {
                     submissionsList.innerHTML = `
                         <div class="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-                            <p class="text-slate-400 font-medium">No recent submissions to review.</p>
+                            <p class="text-slate-400 font-medium">No recent submissions found matching current filters.</p>
                         </div>
                     `;
                 }
             }
 
-            window.markAsChecked = function (subId, subName) {
-                const cmd = `node scripts/sync-submission-status.js "${subId}" "Checked"`;
-                alert(`Submission "${subName}" marked as checked!\n\nTo update Notion, please run:\n${cmd}`);
+            window.markAsChecked = async function (event, subId, subName) {
+                const btn = event.currentTarget || event.target;
+                const originalText = btn.innerHTML;
 
-                // Locally update UI for immediate feedback
-                const sub = NOTION_SUBMISSIONS.find(s => s.id === subId);
-                if (sub) {
-                    sub.status = 'Checked';
-                    renderSubmissions();
+                try {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="animate-pulse">Updating...</span>';
+
+                    const response = await fetch('/.netlify/functions/update-submission-status', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            submissionId: subId,
+                            status: 'Checked'
+                        })
+                    });
+
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        throw new Error(`Invalid server response: ${response.statusText}`);
+                    }
+
+                    if (!response.ok) throw new Error(data.error || 'Failed to update Notion');
+
+                    // Locally update UI for immediate feedback
+                    const sub = (window.NOTION_SUBMISSIONS || []).find(s => s.id === subId);
+                    if (sub) {
+                        sub.status = 'Checked';
+                        renderSubmissions();
+                    }
+
+                    console.log(`✅ Submission "${subName}" marked as checked in Notion.`);
+                } catch (error) {
+                    console.error('Error marking as checked:', error);
+                    alert(`Action failed: ${error.message}`);
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
                 }
-            }
+            };
+
+            [filterStatus, filterGroup, filterTime].forEach(el => {
+                el.addEventListener('change', renderSubmissions);
+            });
 
             classSelect.addEventListener('change', () => {
                 const selectedGroupId = classSelect.value;
                 lessonSelect.innerHTML = '<option value="">Select a lesson...</option>';
 
-                if (selectedGroupId && typeof NOTION_LESSONS !== 'undefined') {
-                    const filteredLessons = Auth.filterData(NOTION_LESSONS).filter(l => l.groupId === selectedGroupId);
+                const lessonsData = window.NOTION_LESSONS || [];
+                console.log(`Class changed to: ${selectedGroupId}, Total lessons: ${lessonsData.length}`);
+
+                if (selectedGroupId && lessonsData.length > 0) {
+                    const filteredLessons = Auth.filterData(lessonsData, 'lessons').filter(l => {
+                        // Support string or array of groupIds
+                        if (l.groupId === selectedGroupId) return true;
+                        if (l.groupIds && Array.isArray(l.groupIds)) return l.groupIds.includes(selectedGroupId);
+                        return false;
+                    });
+
+                    console.log(`Lessons for group ${selectedGroupId}:`, filteredLessons);
 
                     filteredLessons.forEach(lesson => {
                         const date = new Date(lesson.isoDate).toLocaleDateString();
@@ -375,7 +482,7 @@
                 }
             });
 
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const data = {
@@ -393,24 +500,64 @@
 
                 const btn = form.querySelector('button[type="submit"]');
                 const originalText = btn.innerHTML;
-                btn.innerHTML = 'Creating Assignment...';
                 btn.disabled = true;
+                btn.innerHTML = '<span class="animate-pulse">Creating...</span>';
 
-                // Simulate saving to a sync queue
-                const queue = JSON.parse(localStorage.getItem('assignment_sync_queue') || '[]');
-                queue.push(data);
-                localStorage.setItem('assignment_sync_queue', JSON.stringify(queue));
+                try {
+                    const finalInstructions = data.instructions;
 
-                setTimeout(() => {
-                    alert(`Assignment "${data.title}" has been queued for sync!\n\nTo finalize this in Notion, please run the sync script: \nnode scripts/sync-assignments.js "${data.title}" "${data.lessonId}" "${data.instructions}"`);
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
+                    const response = await fetch('/.netlify/functions/create-assignment', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            title: data.title,
+                            lessonId: data.lessonId,
+                            instructions: finalInstructions
+                        })
+                    });
+
+                    let respData;
+                    try {
+                        respData = await response.json();
+                    } catch (e) {
+                        throw new Error(`Invalid server response: ${response.statusText}`);
+                    }
+
+                    if (!response.ok) throw new Error(respData.error || 'Failed to create assignment');
+
+                    alert(`✅ Success! Assignment "${data.title}" has been created in Notion.`);
                     form.reset();
+
                     lessonSelect.innerHTML = '<option value="">Select a lesson...</option>';
-                }, 1000);
+                    console.log(`✅ Assignment "${data.title}" created successfully.`);
+                } catch (error) {
+                    console.error('Create error:', error);
+                    alert(`Error creating assignment: ${error.message}`);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
             });
 
-            initForm();
+            async function init() {
+                try {
+                    submissionsList.innerHTML = `
+                        <div class="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 animate-pulse">
+                            <p class="text-slate-400 font-medium">Loading submissions...</p>
+                        </div>
+                    `;
+                    await DataLoader.waitForData();
+                    initForm();
+                } catch (err) {
+                    console.error("Init failed:", err);
+                    submissionsList.innerHTML = `
+                        <div class="text-center py-20 bg-red-50 rounded-2xl border-2 border-dashed border-red-200">
+                            <p class="text-red-500 font-medium">Failed to load data. Please refresh.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            init();
         });
     </script>
 </body>

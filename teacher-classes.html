@@ -7,6 +7,7 @@
     <title>Teacher Portal - Classes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/teacher-style.css">
+    <script src="assets/js/data-loader.js"></script>
     <script src="assets/js/auth.js"></script>
     <style>
         .tab-btn {
@@ -146,12 +147,12 @@
 
             <div class="mt-auto pt-6 border-t border-slate-100">
                 <div class="flex items-center gap-3 px-2">
-                    <img id="user-avatar" src="https://i.pravatar.cc/150?img=11" alt="Profile"
-                        class="w-10 h-10 rounded-full object-cover">
+                    <img id="user-avatar"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""
+                        class="w-10 h-10 rounded-full object-cover bg-slate-100">
                     <div>
-                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Mr. Anderson</div>
-                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase">Senior Instructor
-                        </div>
+                        <div id="user-name" class="text-sm font-bold text-[#0f172a]">Loading...</div>
+                        <div id="user-role" class="text-[10px] font-bold text-slate-400 uppercase"></div>
                     </div>
                     <button id="logout-btn" class="ml-auto text-slate-400 hover:text-red-500 transition-colors"
                         title="Logout">
@@ -176,7 +177,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input type="text" placeholder="Search assigned classes..." class="search-input">
+                    <input type="text" id="classes-search" placeholder="Search assigned classes..."
+                        class="search-input">
                 </div>
 
                 <div class="flex items-center gap-4">
@@ -242,8 +244,7 @@
                                 List</button>
                             <button data-tab="history" class="tab-btn text-sm font-bold transition-colors">Class
                                 History</button>
-                            <button data-tab="resources"
-                                class="tab-btn text-sm font-bold transition-colors">Resources</button>
+
                         </div>
 
                         <!-- Modal Content Area -->
@@ -271,19 +272,7 @@
                                 </div>
                             </div>
 
-                            <div id="tab-content-resources" class="tab-content hidden">
-                                <div class="text-center py-20">
-                                    <div
-                                        class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                        </svg>
-                                    </div>
-                                    <p class="text-slate-400 font-bold">No resources uploaded for this group yet.</p>
-                                </div>
-                            </div>
+
                         </div>
 
                     </div>
@@ -298,29 +287,36 @@
             const user = Auth.checkAuth('teacher');
             if (!user) return;
 
-            // Update Profile UI
-            const nameEl = document.getElementById('user-name');
-            const avatarEl = document.getElementById('user-avatar');
-            const roleEl = document.getElementById('user-role');
-            const logoutBtn = document.getElementById('logout-btn');
-
-            if (nameEl) nameEl.textContent = user.name;
-            if (avatarEl && user.avatar) avatarEl.src = user.avatar;
-            if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Auth.logout();
-                });
-            }
-
             const container = document.getElementById('classes-container');
             const modal = document.getElementById('group-modal');
             const modalBackdrop = document.getElementById('modal-backdrop');
             const closeModal = document.getElementById('close-modal');
 
-            const mId = document.getElementById('modal-group-id');
+            async function init() {
+                try {
+                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400 animate-pulse">Loading classes...</div>';
+
+                    // Wait for dynamic data to be loaded
+                    const data = await DataLoader.waitForData();
+                    console.log('Groups received by UI:', data?.groups?.length);
+
+                    renderClasses();
+                    setupSearch();
+                } catch (err) {
+                    console.error('Initialization error:', err);
+                    container.innerHTML = `<div class="col-span-full text-center py-20 text-red-400">Error loading data: ${err.message}</div>`;
+                }
+            }
+
+            function setupSearch() {
+                const searchInput = document.getElementById('classes-search');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        renderClasses(e.target.value.toLowerCase());
+                    });
+                }
+            }
+
             const mName = document.getElementById('modal-group-name');
             const mSubtitle = document.getElementById('modal-group-subtitle');
 
@@ -350,33 +346,42 @@
                 return 'No upcoming';
             }
 
-            function renderClasses() {
-                if (typeof NOTION_GROUPS === 'undefined' || NOTION_GROUPS.length === 0) {
-                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">No classes found.</div>';
+            function renderClasses(searchTerm = '') {
+                if (typeof NOTION_GROUPS === 'undefined' || !Array.isArray(NOTION_GROUPS) || NOTION_GROUPS.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">No data found in Notion.</div>';
                     return;
                 }
 
-                const filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
+                let filteredGroups = Auth.filterData(NOTION_GROUPS, 'groups');
+
+                if (searchTerm) {
+                    filteredGroups = filteredGroups.filter(g =>
+                        g.name.toLowerCase().includes(searchTerm) ||
+                        g.id.toLowerCase().includes(searchTerm)
+                    );
+                }
 
                 if (filteredGroups.length === 0) {
-                    container.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">No classes assigned to you.</div>';
+                    const msg = searchTerm ? `No groups match "${searchTerm}"` : 'No classes assigned to you.';
+                    container.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400">${msg}</div>`;
                     return;
                 }
 
                 container.innerHTML = filteredGroups.map(group => {
                     const nextLessonText = getNextLesson(group.id, group.name);
-                    const avatarsHtml = (group.students || []).slice(0, 3).map(s =>
+                    const students = group.students || [];
+                    const avatarsHtml = students.slice(0, 3).map(s =>
                         `<img src="${s.avatar}" alt="${s.name}" class="ring-2 ring-white w-8 h-8 rounded-full object-cover">`
                     ).join('');
 
-                    const moreCount = group.students.length > 3 ? group.students.length - 3 : 0;
+                    const moreCount = students.length > 3 ? students.length - 3 : 0;
                     const moreHtml = moreCount > 0 ? `<div class="avatar-more">+${moreCount}</div>` : '';
 
                     const badgeColorClass = group.type === 'conversation'
                         ? 'bg-orange-50 text-orange-600'
-                        : 'bg-blue-50 text-[#2563eb]';
+                        : (group.type === 'group' ? 'bg-blue-50 text-[#2563eb]' : 'bg-pink-50 text-[#db2777]');
 
-                    const iconColorClass = group.type === 'conversation' ? 'text-orange-600' : 'text-[#2563eb]';
+                    const iconColorClass = group.type === 'conversation' ? 'text-orange-600' : (group.type === 'group' ? 'text-[#2563eb]' : 'text-[#db2777]');
 
                     return `
                         <div class="class-card group cursor-pointer hover:border-[#2563eb] transition-all duration-300" onclick="openGroupDetails('${group.id}')">
@@ -389,7 +394,9 @@
                                 </button>
                             </div>
                             <h3 class="text-xl font-bold text-[#0f172a] mb-1 group-hover:text-[#2563eb] transition-colors">${group.name}</h3>
-                            <p class="text-[#64748b] text-sm font-medium mb-8">${group.type.charAt(0).toUpperCase() + group.type.slice(1)} Group</p>
+                            <p class="text-[#64748b] text-sm font-medium mb-8 uppercase tracking-wide">
+                                ${group.type === 'group' ? 'Lesson Group' : (group.type === 'conversation' ? 'Conversation Practice' : 'Private Lesson')}
+                            </p>
 
                             <div class="grid grid-cols-2 gap-4 mb-8">
                                 <div>
@@ -398,7 +405,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${iconColorClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
-                                        ${group.studentCount}
+                                        ${students.length}
                                     </div>
                                 </div>
                                 <div>
@@ -412,7 +419,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mt-auto">
                                 <div class="avatar-stack">
                                     ${avatarsHtml}
                                     ${moreHtml}
@@ -431,7 +438,8 @@
                 if (!currentGroup) return;
 
                 mName.textContent = currentGroup.name;
-                mSubtitle.textContent = `${currentGroup.level || 'General'} Level • ${currentGroup.studentCount} Students`;
+                const studentCount = currentGroup.students ? currentGroup.students.length : 0;
+                mSubtitle.textContent = `${currentGroup.level || 'General'} Level • ${studentCount} Students`;
 
                 // Set summary
                 studentCountSummary.textContent = `Showing ${currentGroup.students.length} of ${currentGroup.students.length}`;
@@ -448,17 +456,39 @@
             }
 
             function renderStudentTab() {
+                const filteredLessons = Auth.filterData(NOTION_LESSONS);
+                const groupCompletedLessons = filteredLessons.filter(l =>
+                    l.groupId === currentGroup.id &&
+                    l.status.toLowerCase() === 'completed'
+                );
+
                 studentListContainer.innerHTML = (currentGroup.students || []).map(student => {
-                    const attended = student.attendedLessons ?? 0;
-                    const total = student.totalLessons ?? 0;
-                    const rate = Math.round(student.attendanceRate ?? 0);
+                    let totalRelevantSessions = 0;
+                    let attendedCount = 0;
+
+                    groupCompletedLessons.forEach(l => {
+                        // 'students' property are the ones who SHOULD be in the class
+                        const isExpected = (l.students || []).some(s => s.id === student.id);
+                        const isAbsent = (l.absentStudents || []).some(s => s.id === student.id);
+
+                        if (isExpected) {
+                            totalRelevantSessions++;
+                            // Subtract absents from students list to see true participation
+                            if (!isAbsent) {
+                                attendedCount++;
+                            }
+                        }
+                    });
+
+                    const rate = totalRelevantSessions > 0 ? Math.round((attendedCount / totalRelevantSessions) * 100) : 0;
 
                     return `
                         <div class="bg-white border border-slate-100 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-all duration-300">
-                            <img src="${student.avatar}" class="w-12 h-12 rounded-full border-2 border-slate-50 shadow-sm object-cover" alt="${student.name}">
+                            <img src="${student.avatar}" class="w-12 h-12 rounded-full border-2 border-slate-50 shadow-sm object-cover" alt="${student.name}"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=random&length=2&bold=true'">
                             <div>
                                 <h4 class="text-sm font-bold text-slate-800">${student.name}</h4>
-                                <p class="text-[11px] font-bold text-[#2563eb] mt-0.5">Attendance: ${rate}% (${attended} of ${total})</p>
+                                <p class="text-[11px] font-bold text-[#2563eb] mt-0.5">Attendance: ${rate}% (${attendedCount} of ${totalRelevantSessions})</p>
                             </div>
                         </div>
                     `;
@@ -481,11 +511,14 @@
                     const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-                    // Status style
-                    const isCompleted = lesson.status === 'Completed';
-                    const statusClass = isCompleted
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-blue-100 text-blue-600';
+                    const status = (lesson.status || 'Scheduled').toLowerCase();
+                    let statusClass = 'bg-blue-100 text-blue-600';
+
+                    if (status === 'completed') {
+                        statusClass = 'bg-green-100 text-green-600';
+                    } else if (status === 'cancelled' || status === 'canceled') {
+                        statusClass = 'bg-red-100 text-red-600';
+                    }
 
                     return `
                         <div class="bg-white border border-slate-100 rounded-xl p-4 flex items-center justify-between hover:border-blue-100 transition-colors">
@@ -532,7 +565,7 @@
             closeModal.addEventListener('click', handleClose);
             modalBackdrop.addEventListener('click', handleClose);
 
-            renderClasses();
+            init();
         });
     </script>
 </body>
